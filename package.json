@@ -16,6 +16,7 @@
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@svgr/webpack": "^8.1.0",
+    "@tanstack/eslint-plugin-query": "^5.28.11",
     "@types/node": "^20.12.4",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.24",
@@ -50,8 +51,14 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.29.0",
+    "antd": "^5.16.1",
     "axios": "^1.6.8",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
+    "sort-by": "^1.2.0"
   }
 }

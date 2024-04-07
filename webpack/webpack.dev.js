@@ -11,6 +11,7 @@ module.exports = {
     port: 7070, // порт, чтобы открывать сайт по адресу localhost:8080, но можно поменять порт
     open: true, // сайт будет открываться сам при запуске npm run dev
     hot: true,
+    historyApiFallback: true, // Фикс ошибки при обновлении страницы, мб стоит убрать
   },
   plugins: [new ReactRefreshWebpackPlugin()],
 };
