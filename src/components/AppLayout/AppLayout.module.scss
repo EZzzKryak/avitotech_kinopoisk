@@ -6,3 +6,10 @@
   // flex-grow: auto 1 auto;
   text-align: center;
 }
+
+.main {
+  width: 100%;
+  max-width: 1440px;
+  flex-grow: 1;
+  margin: auto;
+}

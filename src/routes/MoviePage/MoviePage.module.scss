@@ -1,0 +1,38 @@
+.movie {
+  display: flex;
+  padding: 0 30px;
+  gap: 20px;
+}
+
+.poster {
+  width: 350px;
+}
+
+.ratingList {
+  list-style: none;
+  padding: 0;
+}
+
+.cast {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px;
+}
+
+.actorPhoto {
+  width: 90px;
+  height: 120px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.actorDescription,
+.actorName {
+  margin: 0;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 16px;
+}

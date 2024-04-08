@@ -2,12 +2,39 @@ import axios from "axios";
 const baseUrl = "https://api.kinopoisk.dev/v1.4/";
 const selectFields =
   "selectFields=id&selectFields=ageRating&selectFields=countries&selectFields=name&selectFields=year&selectFields=poster";
+
+export interface Rating {
+  filmCritics: number;
+  imdb: number;
+  kp: number;
+  russianFilmCritics: number;
+}
+
 interface Movie {
   id: number;
   ageRating: number;
   countries: { name: string }[];
   name: string;
+  description: string;
   year: number;
+  rating: Rating;
+  lists: string[];
+  persons: {
+    id: number;
+    description: string;
+    name: string;
+    photo: string;
+    profession:
+      | "актеры"
+      | "художники"
+      | "композиторы"
+      | "режиссеры"
+      | "монтажеры"
+      | "операторы"
+      | "продюсеры"
+      | "актеры дубляжа"
+      | "редакторы";
+  }[];
   poster: {
     previewUrl: string;
     url: string;
@@ -69,10 +96,24 @@ export const getMoviesByName = async ({
         },
       },
     );
-    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+// Получение фильма по клику (id)
+export const getMovieById = async (id: number): Promise<Movie | undefined> => {
+  try {
+    const { data } = await axios.get<Movie>(`${baseUrl}movie/${id}`, {
+      headers: {
+        "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+      },
+    });
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -93,6 +134,3 @@ export const getMoviesByName = async ({
 //     console.log(error);
 //   }
 // };
-
-// Получение фильма по клику
-const getMovieById = () => {};

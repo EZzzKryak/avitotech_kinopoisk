@@ -11,7 +11,9 @@ const AppLayout = () => {
     <div className={cls.app}>
       <QueryClientProvider client={queryClient}>
         <Header />
-        <Outlet />
+        <main className={cls.main}>
+          <Outlet />
+        </main>
         <Footer />
       </QueryClientProvider>
     </div>
