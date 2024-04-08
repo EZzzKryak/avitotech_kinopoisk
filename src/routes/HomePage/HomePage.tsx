@@ -1,8 +1,13 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Pagination, Select, Space } from "antd";
+import { Form, Pagination, Select, Space } from "antd";
 import { ChangeEvent, useState } from "react";
-import { getMovies } from "../../api/kinopoisk.api";
+import {
+  MoviesResponse,
+  getMoviesByFilters,
+  getMoviesByName,
+} from "../../api/kinopoisk.api";
 import cls from "./HomePage.module.scss";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const [page, setPage] = useState<number>(1);
@@ -11,6 +16,11 @@ const HomePage = () => {
   const [ageRating, setAgeRating] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [year, setYear] = useState<string>("");
+  const [searchedAndFilteredMovies, setSearchedAndFilteredMovies] = useState<
+    MoviesResponse | undefined
+  >();
+
+  const [form] = Form.useForm();
 
   const {
     isPending,
@@ -22,109 +32,161 @@ const HomePage = () => {
   } = useQuery({
     queryKey: ["movies", limit, page, ageRating, country, year],
     queryFn: () =>
-      getMovies({ limit, page, ageRating, country, year, name: searchValue }),
+      getMoviesByFilters({
+        limit,
+        page,
+        ageRating,
+        country,
+        year,
+      }),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false, // Погуглить про свойство
   });
 
-  // Срабатывает при каждои изменении searchValue
-  // const { data: moviesByName } = useQuery({
-  //   queryKey: ["moviesByName", limit, page, ageRating, country, year],
-  //   queryFn: () => getMoviesByName({ limit, page, name: searchValue }),
-  // });
+  const { data: moviesByName } = useQuery({
+    queryKey: ["moviesByName", limit, page, searchValue],
+    queryFn: () => getMoviesByName({ limit, page, name: searchValue }),
+    placeholderData: keepPreviousData,
+    // Запросы уходят только в случае заполненной строки поиска
+    enabled: !!searchValue,
+    refetchOnWindowFocus: false,
+  });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
+    setPage(1);
   };
   const selectPage = (page: number, pageSize: number) => {
     setPage(page);
     setLimit(pageSize);
   };
 
+  const resetSearch = () => {
+    resetFilters();
+    setSearchValue("");
+    setPage(1);
+  };
+
+  const resetFilters = () => {
+    setAgeRating("");
+    setCountry("");
+    setYear("");
+  };
+
   return (
     <main className={cls.main}>
       <div className={cls.content}>
         <section className={cls.filmsContent}>
-          <h1 className={cls.title}>Поиск по Кинопоиску</h1>
-          <ul className={cls.filmsList}>
-            {movies?.docs.map((movie) => (
-              <li className={cls.filmItem} key={movie.id}>
-                <img
-                  className={cls.filmImage}
-                  src={movie.poster.previewUrl}
-                  alt=""
-                />
-                <div className={cls.filmDescription}>
-                  <h3 className={cls.filmTitle}>{movie.name}</h3>
-                  <p className={cls.filmAgeRating}>
-                    Возрастной рейтинг: {movie.ageRating}
-                  </p>
-                  <p className={cls.filmYear}>Год: {movie.year}</p>
-                  <p className={cls.filmCountry}>
-                    Страна: {movie.countries[0].name}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className={cls.headSearch}>
+            <h1 className={cls.title}>Поиск по Кинопоиску</h1>
+            <form action="">
+              <input
+                className={cls.searchInput}
+                type="text"
+                placeholder="Поиск по всем фильмам"
+                value={searchValue}
+                onChange={handleChange}
+              />
+            </form>
+          </div>
+          <div className={cls.filmsWrapper}>
+            <ul className={cls.filmsList}>
+              {(searchValue ? moviesByName : movies)?.docs.map((movie) => (
+                <li key={movie.id}>
+                  <Link className={cls.filmItem} to={`movies/${movie.id}`}>
+                    <img
+                      className={cls.filmImage}
+                      src={movie.poster.previewUrl}
+                      alt=""
+                    />
+                    <div className={cls.filmDescription}>
+                      <h3 className={cls.filmTitle}>{movie.name}</h3>
+                      <p className={cls.filmAgeRating}>
+                        Возрастной рейтинг: {movie.ageRating}
+                      </p>
+                      <p className={cls.filmYear}>Год: {movie.year}</p>
+                      <p className={cls.filmCountry}>
+                        Страна: {movie.countries[0].name}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <aside className={cls.filters}>
+              <h3>Фильтры</h3>
+              <Form form={form} action="">
+                <Form.Item key="moviesFilter">
+                  <Select
+                    value={year}
+                    onChange={(value) => {
+                      setYear(value);
+                      setSearchValue("");
+                      setPage(1);
+                    }}
+                    defaultValue=""
+                    style={{ width: 250 }}
+                    options={[
+                      { value: "", label: "Все годы" },
+                      { value: "2024", label: "2024" },
+                      { value: "2023", label: "2023" },
+                      { value: "2022", label: "2022" },
+                      { value: "2021", label: "2021" },
+                      { value: "2020", label: "2020" },
+                      { value: "2010-2019", label: "2010-2019" },
+                      { value: "2000-2009", label: "2000-2009" },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Select
+                    value={country}
+                    onChange={(value) => {
+                      setCountry(value);
+                      setSearchValue("");
+                      setPage(1);
+                    }}
+                    defaultValue=""
+                    style={{ width: 250 }}
+                    options={[
+                      { value: "", label: "Все страны" },
+                      { value: "Россия", label: "Россия" },
+                      { value: "США", label: "США" },
+                      { value: "СССР", label: "СССР" },
+                      { value: "Франция", label: "Франция" },
+                      { value: "Италия", label: "Италия" },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Select
+                    value={ageRating}
+                    onChange={(value) => {
+                      setAgeRating(value);
+                      setSearchValue("");
+                      setPage(1);
+                    }}
+                    defaultValue=""
+                    style={{ width: 250 }}
+                    options={[
+                      { value: "", label: "Для всей семьи" },
+                      { value: "6-18", label: "6+" },
+                      { value: "12-18", label: "12+" },
+                      { value: "18", label: "18+" },
+                    ]}
+                  />
+                </Form.Item>
+              </Form>
+              <button onClick={resetSearch}>Сбросить фильтры</button>
+            </aside>
+          </div>
         </section>
-        <aside className={cls.filters}>
-          <form action="">
-            <input
-              className={cls.searchInput}
-              type="text"
-              placeholder="Поиск"
-              value={searchValue}
-              onChange={handleChange}
-            />
-          </form>
-          <button>Поиск</button>
-          <Space wrap>
-            <Select
-              onChange={(value) => setYear(value)}
-              defaultValue="Все годы"
-              style={{ width: 250 }}
-              options={[
-                { value: "", label: "Все годы" },
-                { value: "2024", label: "2024" },
-                { value: "2023", label: "2023" },
-                { value: "2022", label: "2022" },
-                { value: "2021", label: "2021" },
-                { value: "2020", label: "2020" },
-                { value: "2010-2019", label: "2010-2019" },
-                { value: "2000-2009", label: "2000-2009" },
-              ]}
-            />
-            <Select
-              onChange={(value) => setCountry(value)}
-              defaultValue="Все страны"
-              style={{ width: 250 }}
-              options={[
-                { value: "", label: "Все страны" },
-                { value: "Россия", label: "Россия" },
-                { value: "США", label: "США" },
-                { value: "СССР", label: "СССР" },
-                { value: "Франция", label: "Франция" },
-                { value: "Италия", label: "Италия" },
-              ]}
-            />
-            <Select
-              onChange={(value) => setAgeRating(value)}
-              defaultValue="Для всей семьи"
-              style={{ width: 250 }}
-              options={[
-                { value: "", label: "Для всей семьи" },
-                { value: "6-18", label: "6+" },
-                { value: "12-18", label: "12+" },
-                { value: "18", label: "18+" },
-              ]}
-            />
-          </Space>
-        </aside>
       </div>
       <Pagination
         className={cls.pagination}
         onChange={selectPage}
-        total={movies?.pages}
+        total={(searchValue ? moviesByName : movies)?.pages}
+        current={page}
       />
     </main>
   );

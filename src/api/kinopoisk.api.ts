@@ -22,17 +22,15 @@ export interface MoviesResponse {
   total: number;
 }
 
-export const getMovies = async ({
+export const getMoviesByFilters = async ({
   limit = 10,
   page = 1,
-  name,
   ageRating,
   country,
   year,
 }: {
   limit?: number;
   page?: number;
-  name: string;
   ageRating: string;
   country: string;
   year: string;
@@ -64,33 +62,37 @@ export const getMoviesByName = async ({
 }): Promise<MoviesResponse | undefined> => {
   try {
     const { data } = await axios.get<MoviesResponse>(
-      `https://api.kinopoisk.dev/v1.4/`,
+      `${baseUrl}movie/search?query=${name}&page=${page}&limit=${limit}`,
       {
         headers: {
           "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
         },
       },
     );
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getCountries = async (): Promise<
-  { name: string; slug: string }[] | undefined
-> => {
-  try {
-    const { data } = await axios.get(
-      `https://api.kinopoisk.dev/v1/movie/possible-values-by-field?field=countries.name`,
-      {
-        headers: {
-          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
-        },
-      },
-    );
-    return data[0].concat(data[1]).concat(data[2]);
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const getCountries = async (): Promise<
+//   { name: string; slug: string }[] | undefined
+// > => {
+//   try {
+//     const { data } = await axios.get(
+//       `https://api.kinopoisk.dev/v1/movie/possible-values-by-field?field=countries.name`,
+//       {
+//         headers: {
+//           "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+//         },
+//       }
+//     );
+//     return data[0].concat(data[1]).concat(data[2]);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// Получение фильма по клику
+const getMovieById = () => {};

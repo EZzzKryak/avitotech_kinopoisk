@@ -7,22 +7,41 @@
 
 .content {
   display: flex;
-  gap: 30px;
   padding: 0 30px;
 }
 
+.headSearch {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  box-sizing: border-box;
+  width: 500px;
+  height: 100%;
+  border-radius: 7px;
+}
+
 .filmsContent {
-  flex-grow: 1;
+  width: 100%;
 }
 
 .title {
-  margin: 0 0 20px 0;
+  margin: 0;
   text-align: left;
   letter-spacing: 1px;
   font-family: "Druk Wide Cy Web Bold Regular", sans-serif;
 }
 
+.filmsWrapper {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+
 .filmsList {
+  flex-grow: 1;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -60,11 +79,6 @@
 .filters {
   justify-self: flex-end;
   width: 250px;
-}
-
-.searchInput {
-  box-sizing: border-box;
-  width: 100%;
 }
 
 .pagination {

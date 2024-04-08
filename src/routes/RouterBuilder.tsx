@@ -1,7 +1,7 @@
 import App from "../components/AppLayout/AppLayout";
-import FilmPage from "./FilmPage/FilmPage";
 import HomePage from "./HomePage/HomePage";
 import NotFoundPage from "./NotFoundPage/NotFoundPage";
+import MoviePage from "./MoviePage/MoviePage";
 
 const RouterBuilder = () => {
   const generalRoutes = [
@@ -10,8 +10,8 @@ const RouterBuilder = () => {
       element: <HomePage />,
     },
     {
-      path: "/film",
-      element: <FilmPage />,
+      path: "/movies/:movieId",
+      element: <MoviePage />,
     },
   ];
 
