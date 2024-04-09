@@ -9,7 +9,6 @@ export interface Rating {
   kp: number;
   russianFilmCritics: number;
 }
-
 interface Movie {
   id: number;
   ageRating: number;
@@ -40,9 +39,20 @@ interface Movie {
     url: string;
   };
 }
-
 export interface MoviesResponse {
   docs: Movie[];
+  limit: number;
+  page: number;
+  pages: number;
+  total: number;
+}
+interface Image {
+  id: string;
+  url: string;
+  previewUrl: string;
+}
+export interface ImagesResponse {
+  docs: Image[];
   limit: number;
   page: number;
   pages: number;
@@ -110,6 +120,26 @@ export const getMovieById = async (id: number): Promise<Movie | undefined> => {
         "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
       },
     });
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Получение картинок по id фильма
+export const getImagesByMovieId = async (
+  id: number,
+): Promise<ImagesResponse | undefined> => {
+  try {
+    const { data } = await axios.get<ImagesResponse>(
+      `${baseUrl}image?movieId=${id}`,
+      {
+        headers: {
+          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+        },
+      },
+    );
     console.log(data);
     return data;
   } catch (err) {

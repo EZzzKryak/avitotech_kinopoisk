@@ -1,7 +1,47 @@
+.leftColumn {
+  width: 400px;
+}
+
+.rightColumn {
+  width: calc(100% - 400px);
+}
+
+.movieTitle {
+  font-family: "Druk Wide Cy Web Bold Regular", sans-serif;
+  text-align: left;
+  font-size: 28px;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
 .movie {
   display: flex;
   padding: 0 30px;
   gap: 20px;
+}
+
+.descriptionContainer {
+  position: relative;
+}
+
+.description {
+  height: auto;
+  text-align: left;
+}
+
+.hiddenDescription {
+  height: 40px;
+  overflow: hidden;
+}
+.hiddenDescription:after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  height: 100%;
+  bottom: 0px;
+  background: linear-gradient(180deg, transparent 0%, white 105%);
+  pointer-events: none;
 }
 
 .poster {
@@ -13,26 +53,49 @@
   padding: 0;
 }
 
+.castTitle {
+  text-align: left;
+}
+
 .cast {
+  cursor: grab;
+  user-select: none;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   list-style: none;
   padding: 0;
-  margin: 0;
-  gap: 10px;
+  margin: 0 0 20px;
 }
 
 .actorPhoto {
-  width: 90px;
-  height: 120px;
-  object-fit: cover;
-  object-position: center;
 }
 
-.actorDescription,
+.actorRole,
 .actorName {
   margin: 0;
   word-break: break-word;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 17px;
+}
+.actorRole {
+  font-weight: 600;
+}
+
+.galleryImage {
+  width: 100px;
+}
+
+.movieInfo {
+  display: flex;
+  gap: 30px;
+}
+
+.tabs {
+  flex-grow: 1;
+}
+
+.slide {
+  display: flex;
+  flex-direction: column;
 }

@@ -4,7 +4,7 @@ import cls from "./Header.module.scss";
 const Header = () => {
   return (
     <header className={cls.header}>
-      <h2>Шапка</h2>
+      <h2 className={cls.headerLogo}>testovoe avito.tech</h2>
       <ul className={cls.links}>
         <li>
           <Link className={cls.link} to="/">

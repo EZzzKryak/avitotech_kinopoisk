@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Form, Pagination, Select } from "antd";
+import { Button, Form, Pagination, Select } from "antd";
 import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -76,7 +76,7 @@ const HomePage = () => {
   return (
     <section className={cls.mainSection}>
       <div className={cls.headSearch}>
-        <h1 className={cls.title}>Поиск по Кинопоиску</h1>
+        <h1 className={cls.title}>Поиск в Кинопоиске</h1>
         <form action="">
           <input
             className={cls.searchInput}
@@ -175,7 +175,7 @@ const HomePage = () => {
               />
             </Form.Item>
           </Form>
-          <button onClick={resetSearch}>Сбросить фильтры</button>
+          <Button onClick={resetSearch}>Сбросить фильтры</Button>
         </aside>
       </div>
       <Pagination
