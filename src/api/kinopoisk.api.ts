@@ -6,7 +6,7 @@ import {
   ReviewsResponse,
   SeriesResponse,
 } from "./types.api";
-const baseUrl = "https://api.kinopoisk.dev/v1.4/";
+export const baseUrl = "https://api.kinopoisk.dev/v1.4/";
 const selectFields =
   "selectFields=id&selectFields=ageRating&selectFields=countries&selectFields=name&selectFields=year&selectFields=poster";
 
@@ -118,10 +118,29 @@ export const getSeriesByMovieId = async (
 
 export const getReviewsByMovieId = async (
   id: number,
+  page?: number,
 ): Promise<ReviewsResponse | undefined> => {
   try {
     const { data } = await axios.get<ReviewsResponse>(
-      `${baseUrl}review?movieId=${id}`,
+      `${baseUrl}review?movieId=&page=${page}&movieId=${id}`,
+      {
+        headers: {
+          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+        },
+      },
+    );
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getCastByMovieId = async (
+  id: number,
+): Promise<ReviewsResponse | undefined> => {
+  try {
+    const { data } = await axios.get<ReviewsResponse>(
+      `https://api.kinopoisk.dev/v1.4/person?&selectFields=name&selectFields=profession&movies.id=${id}`,
       {
         headers: {
           "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",

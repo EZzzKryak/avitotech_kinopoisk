@@ -1,19 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
+import { Button, Tabs, TabsProps } from "antd";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import "swiper/css";
+import { Mousewheel, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import {
   getImagesByMovieId,
   getMovieById,
   getSeriesByMovieId,
-  getReviewsByMovieId,
 } from "../../api/kinopoisk.api";
-import cls from "./MoviePage.module.scss";
-import { Button, Tabs, TabsProps } from "antd";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "./styles.css";
-import { Pagination, Mousewheel } from "swiper/modules";
-import { useState } from "react";
+import Reviews from "../../components/Reviews/Reviews";
 import SeriesMenu from "../../components/SeriesMenu/SeriesMenu";
+import cls from "./MoviePage.module.scss";
+import "./styles.css";
 
 const MoviePage = () => {
   const [descriptionisHidden, setDescriptionisHidden] = useState<boolean>(true);
@@ -24,21 +24,24 @@ const MoviePage = () => {
     queryFn: () => getMovieById(Number(movieId)),
     refetchOnWindowFocus: false,
   });
+
   const { data: movieImages } = useQuery({
     queryKey: ["image"],
     queryFn: () => getImagesByMovieId(Number(movieId)),
     refetchOnWindowFocus: false,
   });
+  // const { data: cast } = useQuery({
+  //   queryKey: ["cast"],
+  //   queryFn: () => getCastByMovieId(Number(movieId)),
+  //   refetchOnWindowFocus: false,
+  // });
+  // console.log(cast);
+
   const { data: series } = useQuery({
     queryKey: ["series"],
     queryFn: () => getSeriesByMovieId(Number(movieId)),
     // Не работает
     enabled: !!data?.isSeries,
-    refetchOnWindowFocus: false,
-  });
-  const { data: reviews } = useQuery({
-    queryKey: ["reviews"],
-    queryFn: () => getReviewsByMovieId(Number(movieId)),
     refetchOnWindowFocus: false,
   });
 
@@ -77,20 +80,7 @@ const MoviePage = () => {
     {
       key: "3",
       label: "Отзывы критиков",
-      children: reviews?.docs ? (
-        <ul>
-          {reviews?.docs?.map((review) => (
-            <li key={review.id}>
-              <h5>{review.title}</h5>
-              <p>{review.title}</p>
-              <p>{review.author}</p>
-              <span>{review.date}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div>Это не сериал, можете ознакомиться с похожими фильмами ниже</div>
-      ),
+      children: <Reviews movieId={movieId} />,
     },
   ];
 
@@ -118,7 +108,7 @@ const MoviePage = () => {
         <Button onClick={handleDescriptionHidden}>
           {descriptionisHidden ? "Показать" : "Скрыть"}
         </Button>
-        <h3 className={cls.castTitle}>Актерский состав</h3>
+        <h3 className={cls.castTitle}>В главных ролях</h3>
         <ul className={cls.cast}>
           <Swiper
             slidesPerView={7}
