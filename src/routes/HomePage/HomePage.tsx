@@ -1,24 +1,19 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Button, Form, Pagination, Select } from "antd";
+import { Button, Form, Input, Pagination, Select } from "antd";
 import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  MoviesResponse,
-  getMoviesByFilters,
-  getMoviesByName,
-} from "../../api/kinopoisk.api";
+import { getMoviesByFilters, getMoviesByName } from "../../api/kinopoisk.api";
 import cls from "./HomePage.module.scss";
+import useDebounce from "../../hooks/useDebounce";
 
 const HomePage = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [searchValue, setSearchValue] = useState<string>("");
+  const debouncedSearchValue = useDebounce(searchValue, 500);
   const [ageRating, setAgeRating] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [year, setYear] = useState<string>("");
-  const [searchedAndFilteredMovies, setSearchedAndFilteredMovies] = useState<
-    MoviesResponse | undefined
-  >();
 
   const [form] = Form.useForm();
 
@@ -44,11 +39,11 @@ const HomePage = () => {
   });
 
   const { data: moviesByName } = useQuery({
-    queryKey: ["moviesByName", limit, page, searchValue],
-    queryFn: () => getMoviesByName({ limit, page, name: searchValue }),
+    queryKey: ["moviesByName", limit, page, debouncedSearchValue],
+    queryFn: () => getMoviesByName({ limit, page, name: debouncedSearchValue }),
     placeholderData: keepPreviousData,
     // Запросы уходят только в случае заполненной строки поиска
-    enabled: !!searchValue,
+    enabled: !!debouncedSearchValue,
     refetchOnWindowFocus: false,
   });
 
@@ -77,15 +72,15 @@ const HomePage = () => {
     <section className={cls.mainSection}>
       <div className={cls.headSearch}>
         <h1 className={cls.title}>Поиск в Кинопоиске</h1>
-        <form action="">
-          <input
+        <Form action="">
+          <Input
             className={cls.searchInput}
             type="text"
             placeholder="Поиск по всем фильмам"
             value={searchValue}
             onChange={handleChange}
           />
-        </form>
+        </Form>
       </div>
       <div className={cls.filmsWrapper}>
         <ul className={cls.filmsList}>
@@ -94,8 +89,8 @@ const HomePage = () => {
               <Link className={cls.filmItem} to={`movies/${movie.id}`}>
                 <img
                   className={cls.filmImage}
-                  src={movie.poster.previewUrl}
-                  alt=""
+                  src={movie.poster?.previewUrl}
+                  alt="Постер фильма"
                 />
                 <div className={cls.filmDescription}>
                   <h3 className={cls.filmTitle}>{movie.name}</h3>
@@ -104,7 +99,10 @@ const HomePage = () => {
                   </p>
                   <p className={cls.filmYear}>Год: {movie.year}</p>
                   <p className={cls.filmCountry}>
-                    Страна: {movie.countries[0].name}
+                    Страна:{" "}
+                    {movie.countries.length
+                      ? movie.countries[0].name
+                      : "Страна неизвестна"}
                   </p>
                 </div>
               </Link>

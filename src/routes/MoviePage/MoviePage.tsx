@@ -1,6 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { getImagesByMovieId, getMovieById } from "../../api/kinopoisk.api";
+import {
+  getImagesByMovieId,
+  getMovieById,
+  getSeriesByMovieId,
+  getReviewsByMovieId,
+} from "../../api/kinopoisk.api";
 import cls from "./MoviePage.module.scss";
 import { Button, Tabs, TabsProps } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,6 +13,7 @@ import "swiper/css";
 import "./styles.css";
 import { Pagination, Mousewheel } from "swiper/modules";
 import { useState } from "react";
+import SeriesMenu from "../../components/SeriesMenu/SeriesMenu";
 
 const MoviePage = () => {
   const [descriptionisHidden, setDescriptionisHidden] = useState<boolean>(true);
@@ -23,62 +29,28 @@ const MoviePage = () => {
     queryFn: () => getImagesByMovieId(Number(movieId)),
     refetchOnWindowFocus: false,
   });
+  const { data: series } = useQuery({
+    queryKey: ["series"],
+    queryFn: () => getSeriesByMovieId(Number(movieId)),
+    // Не работает
+    enabled: !!data?.isSeries,
+    refetchOnWindowFocus: false,
+  });
+  const { data: reviews } = useQuery({
+    queryKey: ["reviews"],
+    queryFn: () => getReviewsByMovieId(Number(movieId)),
+    refetchOnWindowFocus: false,
+  });
 
-  const images = [
-    {
-      original: movieImages?.docs[0].url as string,
-      thumbnail: movieImages?.docs[0].previewUrl as string,
-      originalClass: cls.original,
-    },
-    {
-      original: movieImages?.docs[1].url as string,
-      thumbnail: movieImages?.docs[1].previewUrl as string,
-      originalClass: cls.original,
-    },
-    {
-      original: movieImages?.docs[2].url as string,
-      thumbnail: movieImages?.docs[2].previewUrl as string,
-      originalClass: cls.original,
-    },
-    {
-      original: movieImages?.docs[3].url as string,
-      thumbnail: movieImages?.docs[3].previewUrl as string,
-      originalClass: cls.original,
-    },
-    {
-      original: movieImages?.docs[4].url as string,
-      thumbnail: movieImages?.docs[4].previewUrl as string,
-      originalClass: cls.original,
-    },
-    {
-      original: movieImages?.docs[5].url as string,
-      thumbnail: movieImages?.docs[5].previewUrl as string,
-      originalClass: cls.original,
-    },
-    {
-      original: movieImages?.docs[6].url as string,
-      thumbnail: movieImages?.docs[6].previewUrl as string,
-      originalClass: cls.original,
-    },
-  ];
-
-  const items: TabsProps["items"] = [
+  // Tabs
+  const tabsItems: TabsProps["items"] = [
     {
       key: "1",
       label: "Сезоны и серии",
-      children: (
-        <ul>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-          <li>Серия 1</li>
-        </ul>
+      children: data?.isSeries ? (
+        <SeriesMenu series={series} />
+      ) : (
+        <div>Это не сериал, можете ознакомиться с похожими фильмами ниже</div>
       ),
     },
     {
@@ -105,16 +77,19 @@ const MoviePage = () => {
     {
       key: "3",
       label: "Отзывы критиков",
-      children: (
+      children: reviews?.docs ? (
         <ul>
-          <li>Отзыв</li>
-          <li>Отзыв</li>
-          <li>Отзыв</li>
-          <li>Отзыв</li>
-          <li>Отзыв</li>
-          <li>Отзыв</li>
-          <li>Отзыв</li>
+          {reviews?.docs?.map((review) => (
+            <li key={review.id}>
+              <h5>{review.title}</h5>
+              <p>{review.title}</p>
+              <p>{review.author}</p>
+              <span>{review.date}</span>
+            </li>
+          ))}
         </ul>
+      ) : (
+        <div>Это не сериал, можете ознакомиться с похожими фильмами ниже</div>
       ),
     },
   ];
@@ -179,11 +154,10 @@ const MoviePage = () => {
           type="card"
           size="large"
           defaultActiveKey="1"
-          items={items}
+          items={tabsItems}
         />
       </div>
-
-      <button onClick={() => navigate(-1)}>Назад</button>
+      {/* <Button onClick={() => navigate(-1)}>Назад</Button> */}
     </section>
   );
 };

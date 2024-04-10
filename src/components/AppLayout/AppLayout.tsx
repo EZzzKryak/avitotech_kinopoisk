@@ -13,6 +13,9 @@ const AppLayout = () => {
       <ConfigProvider
         theme={{
           components: {
+            Wave: {
+              colorPrimary: "#000",
+            },
             Button: {
               algorithm: true,
               colorPrimary: "#000",
@@ -26,6 +29,23 @@ const AppLayout = () => {
               itemSelectedColor: "#000",
               itemHoverColor: "#333",
               colorBorderSecondary: "rgb(215, 215, 215)",
+              fontFamily: "Montserrat, sans-serif",
+            },
+            Select: {
+              algorithm: true,
+              controlOutlineWidth: 0,
+              optionFontSize: 16,
+              optionSelectedColor: "#000",
+              optionSelectedBg: "rgb(230, 230, 230)",
+              colorPrimaryHover: "#000",
+              colorPrimary: "#000",
+              fontFamily: "Montserrat, sans-serif",
+            },
+            Input: {
+              algorithm: true,
+              activeBorderColor: "#000",
+              hoverBorderColor: "#000",
+              activeShadow: "none",
               fontFamily: "Montserrat, sans-serif",
             },
           },
