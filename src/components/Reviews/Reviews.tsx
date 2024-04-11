@@ -1,11 +1,12 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { Button } from "antd";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { baseUrl } from "../../api/kinopoisk.api";
 import { ReviewsResponse } from "../../api/types.api";
+import ReviewDescription from "../ReviewDescription/ReviewDescription";
 import cls from "./Review.module.scss";
-import { Button } from "antd";
 
 interface ReviewsProps {
   movieId: string | undefined;
@@ -14,7 +15,7 @@ interface ReviewsProps {
 const Reviews = ({ movieId }: ReviewsProps) => {
   const { ref } = useInView();
   const queryClient = useQueryClient();
-
+  // Делается 2 запроса!!
   const {
     data,
     error,
@@ -47,17 +48,14 @@ const Reviews = ({ movieId }: ReviewsProps) => {
     getPreviousPageParam: (firstPage) => firstPage?.page ?? undefined,
     getNextPageParam: (lastPage) => (lastPage?.page as number) + 1 ?? undefined,
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
   });
 
   useEffect(() => {
     // Очистить кеш при размонтировании компонент
-    // ОБНОВЛЯЕТСЯ ВСЯ СТРАНИЦА ПРИ ОТКРЫТИИ ТАБА!! все запросы делаются заного
     return () => {
-      queryClient.resetQueries();
+      queryClient.resetQueries({ queryKey: ["reviews"], exact: true });
     };
   }, []);
-
   // Для инфинит скрола, заменил кнопкой "Показать еще"
   // useEffect(() => {
   //   if (inView) {
@@ -82,7 +80,7 @@ const Reviews = ({ movieId }: ReviewsProps) => {
                   {review.title ? `«${review.title}»` : ""}
                 </h5>
               </div>
-              <p className={cls.reviewDescription}>{review.review}</p>
+              <ReviewDescription text={review.review} />
               <p className={cls.reviewDate}>
                 Дата публикации: {formatDate(review.date)}
               </p>

@@ -1,4 +1,5 @@
 .movie {
+  padding-top: 30px;
 }
 
 .movieContent {
@@ -13,6 +14,7 @@
 
 .rightColumn {
   width: calc(100% - 400px);
+  position: relative;
 }
 
 .movieTitle {
@@ -34,11 +36,11 @@
   margin: 20px 0 10px;
 }
 
-.hiddenDescription {
+.hiddenElement {
   max-height: 40px;
   overflow: hidden;
 }
-.hiddenDescription:after {
+.hiddenElement:after {
   content: "";
   position: absolute;
   left: 0px;
@@ -52,10 +54,20 @@
 .poster {
   width: 350px;
 }
-.stickyBlock {
+// .stickyBlock {
+//   position: sticky;
+//   top: 30px;
+//   margin-bottom: 50px;
+// }
+.upBtn {
+  margin-top: 100px;
   position: sticky;
-  top: 30px;
-  margin-bottom: 50px;
+  left: 0;
+  top: 100px;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  padding: 0;
 }
 
 .ratingList {
@@ -82,4 +94,10 @@
 .slide {
   display: flex;
   flex-direction: column;
+}
+
+.backBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
 }

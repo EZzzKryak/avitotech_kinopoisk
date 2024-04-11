@@ -1,12 +1,7 @@
-import React, { useState } from "react";
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import { key } from "localforage";
+import React, { useState } from "react";
 import { SeriesResponse } from "../../api/types.api";
 
 type MenuItem = Required<MenuProps>["items"][number];

@@ -7,13 +7,13 @@ import {
   getMovieById,
   getSeriesByMovieId,
 } from "../../api/kinopoisk.api";
+import Awards from "../../components/Awards/Awards";
+import Gallery from "../../components/Gallery/Gallery";
+import MainCast from "../../components/MainCast/MainCast";
 import Reviews from "../../components/Reviews/Reviews";
 import SeriesMenu from "../../components/SeriesMenu/SeriesMenu";
-import cls from "./MoviePage.module.scss";
-import Awards from "../../components/Awards/Awards";
-import MainCast from "../../components/MainCast/MainCast";
-import Gallery from "../../components/Gallery/Gallery";
 import SimilarMovies from "../../components/SimilarMovies/SimilarMovies";
+import cls from "./MoviePage.module.scss";
 
 const MoviePage = () => {
   const navigate = useNavigate();
@@ -69,23 +69,43 @@ const MoviePage = () => {
   const HideDescription = () => {
     setIsHidden((prev) => !prev);
   };
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <section className={cls.movie}>
+    <section id="movieSection" className={cls.movie}>
       <div className={cls.movieContent}>
         <div className={cls.leftColumn}>
           <div className={cls.stickyBlock}>
             <img className={cls.poster} src={data?.poster.url} alt="" />
-            <div>Кинопоиск: {data?.rating.kp?.toFixed(1)}</div>
+            {data?.rating.kp ? (
+              <div>Кинопоиск: {data?.rating.kp?.toFixed(1)}</div>
+            ) : null}
+            {data?.rating.imdb ? (
+              <div>IMBD: {data?.rating.imdb?.toFixed(1)}</div>
+            ) : null}
           </div>
+          <Button
+            onClick={() => scrollToSection("movieSection")}
+            className={cls.upBtn}
+          >
+            Наверх
+          </Button>
         </div>
         <div className={cls.rightColumn}>
+          <Button className={cls.backBtn} onClick={() => navigate(-1)}>
+            Назад
+          </Button>
           <h2 className={cls.movieTitle}>
             {data?.name} ({data?.year})
           </h2>
           <div className={cls.descriptionContainer}>
             <p
-              className={`${cls.description} ${isHidden ? cls.hiddenDescription : ""}`}
+              className={`${cls.description} ${isHidden ? cls.hiddenElement : ""}`}
             >
               {data?.description}
             </p>
