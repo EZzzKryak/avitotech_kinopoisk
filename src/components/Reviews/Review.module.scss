@@ -1,0 +1,57 @@
+.reviews {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reviewItem {
+}
+
+.reviewHeader {
+  margin: 0 25px 3px;
+  display: flex;
+  gap: 5px;
+}
+
+.reviewTitle,
+.reviewAuthor,
+.reviewDescription,
+.reviewDate {
+  margin: 0;
+  padding: 0;
+}
+
+.reviewTitle,
+.reviewAuthor {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.reviewTitle {
+  font-style: italic;
+}
+
+.reviewDescription {
+  text-align: left;
+}
+
+.reviewDate {
+  text-align: right;
+  margin: 5px 25px 0;
+  border-bottom: 1px solid #999;
+  padding-bottom: 5px;
+}
+
+// Переделать глобально?
+.moreBtn {
+  margin: 0 auto;
+  width: 240px;
+  font-size: 16px;
+  line-height: 29px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

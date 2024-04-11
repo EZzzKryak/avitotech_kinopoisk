@@ -39,32 +39,6 @@
   gap: 20px;
 }
 
-.filmItem {
-  display: flex;
-  border: 1px black solid;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.filmImage {
-  width: 100%;
-  height: 200px;
-  object-fit: contain;
-  object-position: center;
-}
-
-.filmTitle {
-  font-size: 16px;
-  line-height: 20px;
-}
-
-.filmAgeRating,
-.filmYear,
-.filmCountry {
-  margin: 0;
-  padding: 0;
-}
-
 .filters {
   justify-self: flex-end;
   width: 250px;

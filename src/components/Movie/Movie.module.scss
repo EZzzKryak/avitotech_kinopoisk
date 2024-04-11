@@ -1,0 +1,50 @@
+.movieItem {
+  display: flex;
+  border: 1px black solid;
+  border-radius: 5px;
+  overflow: hidden;
+  text-align: left;
+  gap: 20px;
+  text-decoration: none;
+  color: #000;
+  transition: transform 0.5s ease;
+}
+.movieItem:hover {
+  transform: scale(1.02);
+}
+
+.movieDescription {
+}
+
+.movieImage {
+  height: 220px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.movieTitle {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.movieAgeRating,
+.movieYear,
+.movieCountries {
+  margin: 0;
+  padding: 0;
+}
+
+.movieCountries {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.country:last-child:before {
+  content: " ";
+}
+
+.country:not(:last-child):after {
+  content: ", ";
+  margin-right: 5px;
+}

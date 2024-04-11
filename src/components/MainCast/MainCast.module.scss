@@ -1,0 +1,30 @@
+.cast {
+  cursor: grab;
+  user-select: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.castTitle {
+  text-align: left;
+}
+
+.actorRole,
+.actorName {
+  margin: 0;
+  word-break: break-word;
+  font-size: 14px;
+  line-height: 17px;
+}
+.actorRole {
+  font-weight: 600;
+}
+
+.slide {
+  display: flex;
+  flex-direction: column;
+}

@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import { getMoviesByFilters, getMoviesByName } from "../../api/kinopoisk.api";
 import cls from "./HomePage.module.scss";
 import useDebounce from "../../hooks/useDebounce";
+import Writer from "../../components/Tipewriter/Tipewriter";
+import Movie from "../../components/Movie/Movie";
+import { ageRatingFilter, countryFilter, yearFilter } from "../../utils/utils";
 
 const HomePage = () => {
   const [page, setPage] = useState<number>(1);
@@ -14,7 +17,6 @@ const HomePage = () => {
   const [ageRating, setAgeRating] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [year, setYear] = useState<string>("");
-
   const [form] = Form.useForm();
 
   const {
@@ -23,7 +25,6 @@ const HomePage = () => {
     error,
     data: movies,
     isFetching,
-    isPlaceholderData,
   } = useQuery({
     queryKey: ["movies", limit, page, ageRating, country, year],
     queryFn: () =>
@@ -35,14 +36,12 @@ const HomePage = () => {
         year,
       }),
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false, // Погуглить про свойство
+    refetchOnWindowFocus: false,
   });
-
   const { data: moviesByName } = useQuery({
     queryKey: ["moviesByName", limit, page, debouncedSearchValue],
     queryFn: () => getMoviesByName({ limit, page, name: debouncedSearchValue }),
     placeholderData: keepPreviousData,
-    // Запросы уходят только в случае заполненной строки поиска
     enabled: !!debouncedSearchValue,
     refetchOnWindowFocus: false,
   });
@@ -59,19 +58,20 @@ const HomePage = () => {
   const resetSearch = () => {
     resetFilters();
     setSearchValue("");
-    setPage(1);
   };
-
   const resetFilters = () => {
     setAgeRating("");
     setCountry("");
     setYear("");
+    setPage(1);
   };
 
   return (
     <section className={cls.mainSection}>
       <div className={cls.headSearch}>
-        <h1 className={cls.title}>Поиск в Кинопоиске</h1>
+        <h1 className={cls.title}>
+          <Writer />
+        </h1>
         <Form action="">
           <Input
             className={cls.searchInput}
@@ -85,28 +85,7 @@ const HomePage = () => {
       <div className={cls.filmsWrapper}>
         <ul className={cls.filmsList}>
           {(searchValue ? moviesByName : movies)?.docs.map((movie) => (
-            <li key={movie.id}>
-              <Link className={cls.filmItem} to={`movies/${movie.id}`}>
-                <img
-                  className={cls.filmImage}
-                  src={movie.poster?.previewUrl}
-                  alt="Постер фильма"
-                />
-                <div className={cls.filmDescription}>
-                  <h3 className={cls.filmTitle}>{movie.name}</h3>
-                  <p className={cls.filmAgeRating}>
-                    Возрастной рейтинг: {movie.ageRating}
-                  </p>
-                  <p className={cls.filmYear}>Год: {movie.year}</p>
-                  <p className={cls.filmCountry}>
-                    Страна:{" "}
-                    {movie.countries.length
-                      ? movie.countries[0].name
-                      : "Страна неизвестна"}
-                  </p>
-                </div>
-              </Link>
-            </li>
+            <Movie key={movie.id} movie={movie} />
           ))}
         </ul>
         <aside className={cls.filters}>
@@ -122,16 +101,7 @@ const HomePage = () => {
                 }}
                 defaultValue=""
                 style={{ width: 250 }}
-                options={[
-                  { value: "", label: "Все годы" },
-                  { value: "2024", label: "2024" },
-                  { value: "2023", label: "2023" },
-                  { value: "2022", label: "2022" },
-                  { value: "2021", label: "2021" },
-                  { value: "2020", label: "2020" },
-                  { value: "2010-2019", label: "2010-2019" },
-                  { value: "2000-2009", label: "2000-2009" },
-                ]}
+                options={yearFilter}
               />
             </Form.Item>
             <Form.Item>
@@ -144,14 +114,7 @@ const HomePage = () => {
                 }}
                 defaultValue=""
                 style={{ width: 250 }}
-                options={[
-                  { value: "", label: "Все страны" },
-                  { value: "Россия", label: "Россия" },
-                  { value: "США", label: "США" },
-                  { value: "СССР", label: "СССР" },
-                  { value: "Франция", label: "Франция" },
-                  { value: "Италия", label: "Италия" },
-                ]}
+                options={countryFilter}
               />
             </Form.Item>
             <Form.Item>
@@ -164,12 +127,7 @@ const HomePage = () => {
                 }}
                 defaultValue=""
                 style={{ width: 250 }}
-                options={[
-                  { value: "", label: "Для всей семьи" },
-                  { value: "6-18", label: "6+" },
-                  { value: "12-18", label: "12+" },
-                  { value: "18", label: "18+" },
-                ]}
+                options={ageRatingFilter}
               />
             </Form.Item>
           </Form>
@@ -177,6 +135,7 @@ const HomePage = () => {
         </aside>
       </div>
       <Pagination
+        locale={{ items_per_page: " на странице" }}
         className={cls.pagination}
         onChange={selectPage}
         total={(searchValue ? moviesByName : movies)?.pages}

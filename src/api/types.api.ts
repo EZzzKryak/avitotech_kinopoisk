@@ -1,83 +1,78 @@
+export interface Pagination {
+  limit: number;
+  page: number;
+  pages: number;
+  total: number;
+}
+export enum ReviewStatus {
+  POSITIVE = "Позитивный",
+  NEYTRAL = "Нейтральный",
+  NEGATIVE = "Негативный",
+}
+export type Professions =
+  | "актеры"
+  | "художники"
+  | "композиторы"
+  | "режиссеры"
+  | "монтажеры"
+  | "операторы"
+  | "продюсеры"
+  | "актеры дубляжа"
+  | "редакторы";
+export interface Persons {
+  id: number;
+  description: string;
+  name: string;
+  photo: string;
+  profession: Professions;
+}
+export interface Episodes {
+  name: string;
+  number: number;
+}
 export interface Rating {
   filmCritics: number;
   imdb: number;
   kp: number;
   russianFilmCritics: number;
 }
+export interface Poster {
+  previewUrl: string;
+  url: string;
+}
 export interface Movie {
   id: number;
   ageRating: number;
+  similarMovies: Movie[];
   countries: { name: string }[];
   name: string;
   description: string;
   year: number;
   rating: Rating;
   lists: string[];
-  persons: {
-    id: number;
-    description: string;
-    name: string;
-    photo: string;
-    profession:
-      | "актеры"
-      | "художники"
-      | "композиторы"
-      | "режиссеры"
-      | "монтажеры"
-      | "операторы"
-      | "продюсеры"
-      | "актеры дубляжа"
-      | "редакторы";
-  }[];
-  poster: {
-    previewUrl: string;
-    url: string;
-  };
-  backdrop: {
-    previewUrl: string;
-    url: string;
-  };
+  persons: Persons[];
+  poster: Poster;
+  backdrop: Poster;
   isSeries: boolean;
 }
-export interface MoviesResponse {
+export interface MoviesResponse extends Pagination {
   docs: Movie[];
-  limit: number;
-  page: number;
-  pages: number;
-  total: number;
 }
-
-export interface Image {
+export interface Image extends Poster {
   id: string;
-  url: string;
-  previewUrl: string;
 }
-export interface ImagesResponse {
+export interface ImagesResponse extends Pagination {
   docs: Image[];
-  limit: number;
-  page: number;
-  pages: number;
-  total: number;
 }
-
 export interface Serie {
-  id: string;
   name: string;
   number: number;
   movieId: number;
-  episodes: {
-    name: string;
-    number: number;
-  }[];
+  episodes: Episodes[];
 }
-export interface SeriesResponse {
+export interface SeriesResponse extends Pagination {
   docs: Serie[];
-  limit: number;
-  page: number;
-  pages: number;
-  total: number;
 }
-
 export interface Review {
   id: number;
   author: string;
@@ -86,12 +81,8 @@ export interface Review {
   movieId: number;
   review: string;
   title: string;
-  type: "Позитивный" | "Нейтральный" | "Негативный";
+  type: ReviewStatus;
 }
-export interface ReviewsResponse {
+export interface ReviewsResponse extends Pagination {
   docs: Review[];
-  limit: number;
-  page: number;
-  pages: number;
-  total: number;
 }

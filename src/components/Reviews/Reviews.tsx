@@ -4,13 +4,15 @@ import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { baseUrl } from "../../api/kinopoisk.api";
 import { ReviewsResponse } from "../../api/types.api";
+import cls from "./Review.module.scss";
+import { Button } from "antd";
 
 interface ReviewsProps {
   movieId: string | undefined;
 }
 
 const Reviews = ({ movieId }: ReviewsProps) => {
-  const { ref, inView } = useInView();
+  const { ref } = useInView();
   const queryClient = useQueryClient();
 
   const {
@@ -23,7 +25,6 @@ const Reviews = ({ movieId }: ReviewsProps) => {
     fetchPreviousPage,
     hasNextPage,
     hasPreviousPage,
-    refetch,
   } = useInfiniteQuery({
     queryKey: ["reviews"],
     queryFn: async ({ pageParam }): Promise<ReviewsResponse | undefined> => {
@@ -57,34 +58,47 @@ const Reviews = ({ movieId }: ReviewsProps) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, inView]);
+  // Для инфинит скрола, заменил кнопкой "Показать еще"
+  // useEffect(() => {
+  //   if (inView) {
+  //     fetchNextPage();
+  //   }
+  // }, [fetchNextPage, inView]);
+
+  const formatDate = (dateFormat: string): string => {
+    const date = dateFormat.substr(0, 10).split("-").reverse().join(".");
+    return date;
+  };
 
   return (
-    <div>
+    <ul className={cls.reviews}>
       {data?.pages.map((page) => (
         <React.Fragment key={page?.page}>
           {page?.docs.map((review) => (
-            <li key={review.id}>
-              <h5>{review.title}</h5>
-              <p>{review.title}</p>
-              <p>{review.author}</p>
-              <span>{review.date}</span>
+            <li className={cls.reviewItem} key={review.id}>
+              <div className={cls.reviewHeader}>
+                <p className={cls.reviewAuthor}>{review.author} пишет:</p>
+                <h5 className={cls.reviewTitle}>
+                  {review.title ? `«${review.title}»` : ""}
+                </h5>
+              </div>
+              <p className={cls.reviewDescription}>{review.review}</p>
+              <p className={cls.reviewDate}>
+                Дата публикации: {formatDate(review.date)}
+              </p>
             </li>
           ))}
         </React.Fragment>
       ))}
-      <button
+      <Button
+        className={cls.moreBtn}
         ref={ref}
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}
       >
         Посмотреть ещё
-      </button>
-    </div>
+      </Button>
+    </ul>
   );
 };
 

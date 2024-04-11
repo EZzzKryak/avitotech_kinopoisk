@@ -37,7 +37,7 @@ const SeriesMenu = ({ series }: { series: SeriesResponse | undefined }) => {
   const items: MenuItem[] = series?.docs.map((item) =>
     getItem(
       item.name,
-      item.id.toString(),
+      item.number.toString(),
       <AppstoreOutlined />,
       item.episodes.map((episode) =>
         getItem(episode.name, episode.number.toString()),

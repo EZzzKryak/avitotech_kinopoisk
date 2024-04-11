@@ -11,6 +11,11 @@ const Header = () => {
             Главная
           </Link>
         </li>
+        <li>
+          <Link className={cls.link} to="/signin">
+            Выйти
+          </Link>
+        </li>
       </ul>
     </header>
   );

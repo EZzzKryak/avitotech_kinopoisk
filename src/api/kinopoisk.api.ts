@@ -140,7 +140,7 @@ export const getCastByMovieId = async (
 ): Promise<ReviewsResponse | undefined> => {
   try {
     const { data } = await axios.get<ReviewsResponse>(
-      `https://api.kinopoisk.dev/v1.4/person?&selectFields=name&selectFields=profession&movies.id=${id}`,
+      `https://api.kinopoisk.dev/v1.4/person?selectFields=name&selectFields=profession&movies.id=${id}`,
       {
         headers: {
           "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
