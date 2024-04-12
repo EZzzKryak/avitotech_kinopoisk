@@ -1,13 +1,13 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, Pagination, Select } from "antd";
-import { ChangeEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { ChangeEvent, useEffect, useState } from "react";
 import { getMoviesByFilters, getMoviesByName } from "../../api/kinopoisk.api";
 import cls from "./HomePage.module.scss";
 import useDebounce from "../../hooks/useDebounce";
 import Writer from "../../components/Tipewriter/Tipewriter";
 import Movie from "../../components/Movie/Movie";
 import { ageRatingFilter, countryFilter, yearFilter } from "../../utils/utils";
+import ScrollToTop from "react-scroll-to-top";
 
 const HomePage = () => {
   const [page, setPage] = useState<number>(1);
@@ -18,6 +18,42 @@ const HomePage = () => {
   const [country, setCountry] = useState<string>("");
   const [year, setYear] = useState<string>("");
   const [form] = Form.useForm();
+
+  // useEffect(() => {
+  //   localStorage.setItem("year", JSON.stringify(year));
+  //   localStorage.setItem("country", JSON.stringify(country));
+  //   localStorage.setItem("ageRating", JSON.stringify(ageRating));
+  //   localStorage.setItem("searchValue", JSON.stringify(searchValue));
+  //   localStorage.setItem("page", JSON.stringify(page));
+  // }, [year, country, ageRating, searchValue, page]);
+
+  useEffect(() => {
+    if (localStorage.getItem("year")) {
+      // @ts-ignore
+      const year = JSON.parse(localStorage.getItem("year"));
+      setYear(year);
+    }
+    if (localStorage.getItem("country")) {
+      // @ts-ignore
+      const country = JSON.parse(localStorage.getItem("country"));
+      setCountry(country);
+    }
+    if (localStorage.getItem("ageRating")) {
+      // @ts-ignore
+      const ageRating = JSON.parse(localStorage.getItem("ageRating"));
+      setAgeRating(ageRating);
+    }
+    if (localStorage.getItem("searchValue")) {
+      // @ts-ignore
+      const searchValue = JSON.parse(localStorage.getItem("searchValue"));
+      setSearchValue(searchValue);
+    }
+    if (localStorage.getItem("page")) {
+      // @ts-ignore
+      const page = JSON.parse(localStorage.getItem("page"));
+      setPage(page);
+    }
+  }, []);
 
   const {
     isPending,
@@ -38,6 +74,7 @@ const HomePage = () => {
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
   });
+
   const { data: moviesByName } = useQuery({
     queryKey: ["moviesByName", limit, page, debouncedSearchValue],
     queryFn: () => getMoviesByName({ limit, page, name: debouncedSearchValue }),
@@ -48,16 +85,27 @@ const HomePage = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
-    setPage(1);
+    localStorage.setItem("searchValue", JSON.stringify(e.target.value));
+    resetStorageFilters();
+    resetFilters();
   };
   const selectPage = (page: number, pageSize: number) => {
     setPage(page);
     setLimit(pageSize);
+    localStorage.setItem("page", JSON.stringify(page));
   };
 
-  const resetSearch = () => {
-    resetFilters();
+  const resetSearchValue = () => {
     setSearchValue("");
+    resetFilters();
+    resetStorageFilters();
+    localStorage.removeItem("searchValue");
+  };
+  const resetStorageFilters = () => {
+    localStorage.removeItem("year");
+    localStorage.removeItem("ageRating");
+    localStorage.removeItem("country");
+    localStorage.removeItem("page");
   };
   const resetFilters = () => {
     setAgeRating("");
@@ -68,11 +116,12 @@ const HomePage = () => {
 
   return (
     <section className={cls.mainSection}>
+      <ScrollToTop top={800} smooth={true} />
       <div className={cls.headSearch}>
         <h1 className={cls.title}>
           <Writer />
         </h1>
-        <Form action="">
+        <Form className={cls.searchForm} action="">
           <Input
             className={cls.searchInput}
             type="text"
@@ -96,8 +145,11 @@ const HomePage = () => {
                 value={year}
                 onChange={(value) => {
                   setYear(value);
+                  localStorage.setItem("year", JSON.stringify(value));
                   setSearchValue("");
+                  localStorage.removeItem("searchValue");
                   setPage(1);
+                  localStorage.removeItem("page");
                 }}
                 defaultValue=""
                 style={{ width: 250 }}
@@ -109,8 +161,11 @@ const HomePage = () => {
                 value={country}
                 onChange={(value) => {
                   setCountry(value);
+                  localStorage.setItem("country", JSON.stringify(value));
                   setSearchValue("");
+                  localStorage.removeItem("searchValue");
                   setPage(1);
+                  localStorage.removeItem("page");
                 }}
                 defaultValue=""
                 style={{ width: 250 }}
@@ -122,8 +177,11 @@ const HomePage = () => {
                 value={ageRating}
                 onChange={(value) => {
                   setAgeRating(value);
+                  localStorage.setItem("ageRating", JSON.stringify(value));
                   setSearchValue("");
+                  localStorage.removeItem("searchValue");
                   setPage(1);
+                  localStorage.removeItem("page");
                 }}
                 defaultValue=""
                 style={{ width: 250 }}
@@ -131,7 +189,7 @@ const HomePage = () => {
               />
             </Form.Item>
           </Form>
-          <Button onClick={resetSearch}>Сбросить фильтры</Button>
+          <Button onClick={resetSearchValue}>Сбросить фильтры</Button>
         </aside>
       </div>
       <Pagination

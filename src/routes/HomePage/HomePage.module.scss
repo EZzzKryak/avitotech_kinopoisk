@@ -5,9 +5,12 @@
 .headSearch {
   display: flex;
   justify-content: space-between;
+  gap: 30px;
   margin-bottom: 20px;
 }
 
+.searchForm {
+}
 .searchInput {
   box-sizing: border-box;
   width: 500px;

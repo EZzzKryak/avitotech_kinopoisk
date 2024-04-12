@@ -8,7 +8,7 @@ import {
 } from "./types.api";
 export const baseUrl = "https://api.kinopoisk.dev/v1.4/";
 const selectFields =
-  "selectFields=id&selectFields=ageRating&selectFields=countries&selectFields=name&selectFields=year&selectFields=poster";
+  "selectFields=id&selectFields=ageRating&selectFields=countries&selectFields=enName&selectFields=name&selectFields=year&selectFields=poster";
 
 export const getMoviesByFilters = async ({
   limit = 10,

@@ -1,19 +1,20 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "antd";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { LegacyRef, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { baseUrl } from "../../api/kinopoisk.api";
 import { ReviewsResponse } from "../../api/types.api";
 import ReviewDescription from "../ReviewDescription/ReviewDescription";
 import cls from "./Review.module.scss";
+import Placeholder from "../Placeholder/Placeholder";
 
 interface ReviewsProps {
   movieId: string | undefined;
 }
 
 const Reviews = ({ movieId }: ReviewsProps) => {
-  const { ref } = useInView();
+  // const { ref } = useInView();
   const queryClient = useQueryClient();
   // Делается 2 запроса!!
   const {
@@ -38,7 +39,6 @@ const Reviews = ({ movieId }: ReviewsProps) => {
             },
           },
         );
-        console.log(data);
         return data;
       } catch (err) {
         console.log(err);
@@ -64,7 +64,7 @@ const Reviews = ({ movieId }: ReviewsProps) => {
   // }, [fetchNextPage, inView]);
 
   const formatDate = (dateFormat: string): string => {
-    const date = dateFormat.substr(0, 10).split("-").reverse().join(".");
+    const date = dateFormat.substring(0, 10).split("-").reverse().join(".");
     return date;
   };
 
@@ -72,30 +72,36 @@ const Reviews = ({ movieId }: ReviewsProps) => {
     <ul className={cls.reviews}>
       {data?.pages.map((page) => (
         <React.Fragment key={page?.page}>
-          {page?.docs.map((review) => (
-            <li className={cls.reviewItem} key={review.id}>
-              <div className={cls.reviewHeader}>
-                <p className={cls.reviewAuthor}>{review.author} пишет:</p>
-                <h5 className={cls.reviewTitle}>
-                  {review.title ? `«${review.title}»` : ""}
-                </h5>
-              </div>
-              <ReviewDescription text={review.review} />
-              <p className={cls.reviewDate}>
-                Дата публикации: {formatDate(review.date)}
-              </p>
-            </li>
-          ))}
+          {page?.docs.length ? (
+            page?.docs.map((review) => (
+              <li className={cls.reviewItem} key={review.id}>
+                <div className={cls.reviewHeader}>
+                  <p className={cls.reviewAuthor}>{review.author} пишет:</p>
+                  <h5 className={cls.reviewTitle}>
+                    {review.title ? `«${review.title}»` : ""}
+                  </h5>
+                </div>
+                <ReviewDescription text={review.review} />
+                <p className={cls.reviewDate}>
+                  Дата публикации: {formatDate(review.date)}
+                </p>
+              </li>
+            ))
+          ) : (
+            <Placeholder text="Пока нет комментариев и рецензий" />
+          )}
         </React.Fragment>
       ))}
-      <Button
-        className={cls.moreBtn}
-        ref={ref}
-        onClick={() => fetchNextPage()}
-        disabled={!hasNextPage || isFetchingNextPage}
-      >
-        Посмотреть ещё
-      </Button>
+      {data?.pages[0]?.docs.length ||
+      data?.pages[0]?.page !== data?.pages[0]?.total ? (
+        <Button
+          className={cls.moreBtn}
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          Посмотреть ещё
+        </Button>
+      ) : null}
     </ul>
   );
 };

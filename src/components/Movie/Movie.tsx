@@ -16,11 +16,14 @@ const Movie = ({ movie }: MovieProps) => {
           alt="Постер фильма"
         />
         <div className={cls.movieDescription}>
-          <h3 className={cls.movieTitle}>{movie.name}</h3>
+          <h3 className={cls.movieTitle}>
+            {movie.name || movie.enName || "*Имя отсутствует"}
+          </h3>
           <p className={cls.movieAgeRating}>
-            Возрастной рейтинг:&nbsp;{movie.ageRating}
+            Возрастной рейтинг:&nbsp;
+            {movie.ageRating == 0 ? 0 : movie.ageRating || "Не указан"}
           </p>
-          <p className={cls.movieYear}>Год:&nbsp;{movie.year}</p>
+          <p className={cls.movieYear}>Год:&nbsp;{movie.year || "Не указан"}</p>
           <ul className={cls.movieCountries}>
             <li>Страна:&nbsp;</li>
             {movie.countries.length

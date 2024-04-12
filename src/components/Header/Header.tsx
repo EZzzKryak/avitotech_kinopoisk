@@ -4,19 +4,12 @@ import cls from "./Header.module.scss";
 const Header = () => {
   return (
     <header className={cls.header}>
-      <h2 className={cls.headerLogo}>testovoe avito.tech</h2>
-      <ul className={cls.links}>
-        <li>
-          <Link className={cls.link} to="/">
-            Главная
-          </Link>
-        </li>
-        <li>
-          <Link className={cls.link} to="/signin">
-            Выйти
-          </Link>
-        </li>
-      </ul>
+      <Link className={cls.link} to="/">
+        <h2 className={cls.headerLogo}>Поиск в Кинопоиске</h2>
+      </Link>
+      <Link className={cls.link} to="/signin">
+        Выйти
+      </Link>
     </header>
   );
 };

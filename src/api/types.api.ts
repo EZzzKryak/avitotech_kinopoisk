@@ -40,12 +40,24 @@ export interface Poster {
   previewUrl: string;
   url: string;
 }
+export interface Budget {
+  value: number;
+  currency: string;
+}
+export interface Fees {
+  world: Budget;
+  russia: Budget;
+  usa: Budget;
+}
 export interface Movie {
   id: number;
   ageRating: number;
   similarMovies: Movie[];
   countries: { name: string }[];
   name: string;
+  enName: string;
+  budget: Budget;
+  fees: Fees;
   description: string;
   year: number;
   rating: Rating;

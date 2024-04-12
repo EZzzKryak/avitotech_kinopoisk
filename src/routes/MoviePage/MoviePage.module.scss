@@ -52,22 +52,8 @@
 }
 
 .poster {
-  width: 350px;
-}
-// .stickyBlock {
-//   position: sticky;
-//   top: 30px;
-//   margin-bottom: 50px;
-// }
-.upBtn {
-  margin-top: 100px;
-  position: sticky;
-  left: 0;
-  top: 100px;
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  padding: 0;
+  height: 530px;
+  object-fit: contain;
 }
 
 .ratingList {
@@ -78,13 +64,6 @@
 .movieInfo {
   display: flex;
   gap: 30px;
-}
-
-.noSeries {
-  margin: 20px 0;
-  text-align: left;
-  font-size: 18px;
-  line-height: 22px;
 }
 
 .tabs {

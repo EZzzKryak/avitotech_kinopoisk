@@ -7,7 +7,7 @@ const Writer = () => {
         words={["Кинопоиск", "Поиск в Кинопоиске"]}
         cursor
         cursorStyle="_"
-        typeSpeed={150}
+        typeSpeed={120}
         delaySpeed={1500}
         loop={1}
       />
