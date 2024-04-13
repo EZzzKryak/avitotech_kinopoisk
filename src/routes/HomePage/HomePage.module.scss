@@ -1,25 +1,33 @@
 .mainSection {
   padding: 30px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .headSearch {
   display: flex;
   justify-content: space-between;
-  gap: 30px;
+  gap: 80px;
   margin-bottom: 20px;
 }
 
 .searchForm {
+  min-width: 250px;
+  max-width: 800px;
+  flex: 1;
 }
 .searchInput {
   box-sizing: border-box;
-  width: 500px;
+  width: 100%;
   height: 100%;
   border-radius: 7px;
   font-size: 20px;
 }
 
 .title {
+  font-size: 32px;
+  line-height: 50px;
   margin: 0;
   text-align: left;
   letter-spacing: 1px;
@@ -38,13 +46,25 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.aside {
+  justify-self: flex-end;
+  width: 250px;
 }
 
 .filters {
-  justify-self: flex-end;
-  width: 250px;
+  position: sticky;
+  top: 50px;
+  right: 0;
+}
+
+.moviesNotFound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pagination {

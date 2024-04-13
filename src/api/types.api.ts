@@ -9,6 +9,10 @@ export enum ReviewStatus {
   NEYTRAL = "Нейтральный",
   NEGATIVE = "Негативный",
 }
+export interface Country {
+  name: string;
+  slug: string;
+}
 export type Professions =
   | "актеры"
   | "художники"
@@ -53,7 +57,7 @@ export interface Movie {
   id: number;
   ageRating: number;
   similarMovies: Movie[];
-  countries: { name: string }[];
+  countries: Country[];
   name: string;
   enName: string;
   budget: Budget;

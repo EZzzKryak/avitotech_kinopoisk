@@ -1,15 +1,17 @@
-import cls from "./MainCast.module.scss";
+import { Skeleton } from "antd";
 import "swiper/css";
 import { Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Movie, Persons, Professions } from "../../api/types.api";
-import "./styles.css";
+import { Persons } from "../../api/types.api";
 import Placeholder from "./../Placeholder/Placeholder";
+import cls from "./MainCast.module.scss";
+import "./styles.css";
 
 interface MainCastProps {
   cast: Persons[] | undefined;
+  isFetching: boolean;
 }
-const MainCast = ({ cast }: MainCastProps) => {
+const MainCast = ({ cast, isFetching }: MainCastProps) => {
   // Для полного списка каста
   // const { data: cast } = useQuery({
   //   queryKey: ["cast"],
@@ -36,15 +38,19 @@ const MainCast = ({ cast }: MainCastProps) => {
                 return (
                   <li key={person.id}>
                     <SwiperSlide key={person.id}>
-                      <div className={cls.slide}>
-                        <img
-                          className={cls.actorPhoto}
-                          src={person.photo}
-                          alt={person.description}
-                        />
-                        <p className={cls.actorRole}>{person.description}</p>
-                        <p className={cls.actorName}>{person.name}</p>
-                      </div>
+                      {isFetching ? (
+                        <Skeleton.Image active />
+                      ) : (
+                        <div className={cls.slide}>
+                          <img
+                            className={cls.actorPhoto}
+                            src={person.photo}
+                            alt={person.description}
+                          />
+                          <p className={cls.actorRole}>{person.description}</p>
+                          <p className={cls.actorName}>{person.name}</p>
+                        </div>
+                      )}
                     </SwiperSlide>
                   </li>
                 );

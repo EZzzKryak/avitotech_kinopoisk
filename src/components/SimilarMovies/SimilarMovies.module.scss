@@ -1,3 +1,7 @@
+.similarMovies {
+  margin-bottom: 20px;
+}
+
 .similarTitle {
   margin: 50px 0 20px;
 }
@@ -12,4 +16,15 @@
 .slide {
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: #000;
+}
+
+.similarImage {
+  height: 320px !important;
+}
+
+.similarName {
+  font-size: 16px;
+  margin: 10px 0 0;
 }

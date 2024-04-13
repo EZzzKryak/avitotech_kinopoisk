@@ -1,13 +1,13 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, Pagination, Select } from "antd";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getMoviesByFilters, getMoviesByName } from "../../api/kinopoisk.api";
-import cls from "./HomePage.module.scss";
-import useDebounce from "../../hooks/useDebounce";
-import Writer from "../../components/Tipewriter/Tipewriter";
-import Movie from "../../components/Movie/Movie";
-import { ageRatingFilter, countryFilter, yearFilter } from "../../utils/utils";
 import ScrollToTop from "react-scroll-to-top";
+import { getMoviesByFilters, getMoviesByName } from "../../api/kinopoisk.api";
+import Movie from "../../components/Movie/Movie";
+import Writer from "../../components/Tipewriter/Tipewriter";
+import useDebounce from "../../hooks/useDebounce";
+import { ageRatingFilter, countryFilter, yearFilter } from "../../utils/utils";
+import cls from "./HomePage.module.scss";
 
 const HomePage = () => {
   const [page, setPage] = useState<number>(1);
@@ -19,50 +19,36 @@ const HomePage = () => {
   const [year, setYear] = useState<string>("");
   const [form] = Form.useForm();
 
-  // useEffect(() => {
-  //   localStorage.setItem("year", JSON.stringify(year));
-  //   localStorage.setItem("country", JSON.stringify(country));
-  //   localStorage.setItem("ageRating", JSON.stringify(ageRating));
-  //   localStorage.setItem("searchValue", JSON.stringify(searchValue));
-  //   localStorage.setItem("page", JSON.stringify(page));
-  // }, [year, country, ageRating, searchValue, page]);
-
   useEffect(() => {
     if (localStorage.getItem("year")) {
-      // @ts-ignore
-      const year = JSON.parse(localStorage.getItem("year"));
+      const year = JSON.parse(localStorage.getItem("year") || "");
       setYear(year);
     }
     if (localStorage.getItem("country")) {
-      // @ts-ignore
-      const country = JSON.parse(localStorage.getItem("country"));
+      const country = JSON.parse(localStorage.getItem("country") || "");
       setCountry(country);
     }
     if (localStorage.getItem("ageRating")) {
-      // @ts-ignore
-      const ageRating = JSON.parse(localStorage.getItem("ageRating"));
+      const ageRating = JSON.parse(localStorage.getItem("ageRating") || "");
       setAgeRating(ageRating);
     }
     if (localStorage.getItem("searchValue")) {
-      // @ts-ignore
-      const searchValue = JSON.parse(localStorage.getItem("searchValue"));
+      const searchValue = JSON.parse(localStorage.getItem("searchValue") || "");
       setSearchValue(searchValue);
     }
     if (localStorage.getItem("page")) {
-      // @ts-ignore
-      const page = JSON.parse(localStorage.getItem("page"));
+      const page = JSON.parse(localStorage.getItem("page") || "");
       setPage(page);
     }
   }, []);
 
   const {
-    isPending,
+    isFetching,
     isError,
     error,
-    data: movies,
-    isFetching,
+    data: moviesByFilters,
   } = useQuery({
-    queryKey: ["movies", limit, page, ageRating, country, year],
+    queryKey: ["moviesByFilters", limit, page, ageRating, country, year],
     queryFn: () =>
       getMoviesByFilters({
         limit,
@@ -125,7 +111,7 @@ const HomePage = () => {
           <Input
             className={cls.searchInput}
             type="text"
-            placeholder="Поиск по всем фильмам"
+            placeholder="Введите название фильма или сериала"
             value={searchValue}
             onChange={handleChange}
           />
@@ -133,70 +119,82 @@ const HomePage = () => {
       </div>
       <div className={cls.filmsWrapper}>
         <ul className={cls.filmsList}>
-          {(searchValue ? moviesByName : movies)?.docs.map((movie) => (
-            <Movie key={movie.id} movie={movie} />
+          {moviesByFilters?.docs.length === 0 && (
+            <div className={cls.moviesNotFound}>
+              По вашему запросу ничего не найдено
+            </div>
+          )}
+          {moviesByName?.docs.length === 0 && searchValue && (
+            <div className={cls.moviesNotFound}>
+              По вашему запросу ничего не найдено
+            </div>
+          )}
+          {(searchValue ? moviesByName : moviesByFilters)?.docs.map((movie) => (
+            <Movie isFetching={isFetching} key={movie.id} movie={movie} />
           ))}
         </ul>
-        <aside className={cls.filters}>
-          <h3>Фильтры</h3>
-          <Form form={form} action="">
-            <Form.Item key="moviesFilter">
-              <Select
-                value={year}
-                onChange={(value) => {
-                  setYear(value);
-                  localStorage.setItem("year", JSON.stringify(value));
-                  setSearchValue("");
-                  localStorage.removeItem("searchValue");
-                  setPage(1);
-                  localStorage.removeItem("page");
-                }}
-                defaultValue=""
-                style={{ width: 250 }}
-                options={yearFilter}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Select
-                value={country}
-                onChange={(value) => {
-                  setCountry(value);
-                  localStorage.setItem("country", JSON.stringify(value));
-                  setSearchValue("");
-                  localStorage.removeItem("searchValue");
-                  setPage(1);
-                  localStorage.removeItem("page");
-                }}
-                defaultValue=""
-                style={{ width: 250 }}
-                options={countryFilter}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Select
-                value={ageRating}
-                onChange={(value) => {
-                  setAgeRating(value);
-                  localStorage.setItem("ageRating", JSON.stringify(value));
-                  setSearchValue("");
-                  localStorage.removeItem("searchValue");
-                  setPage(1);
-                  localStorage.removeItem("page");
-                }}
-                defaultValue=""
-                style={{ width: 250 }}
-                options={ageRatingFilter}
-              />
-            </Form.Item>
-          </Form>
-          <Button onClick={resetSearchValue}>Сбросить фильтры</Button>
+        <aside className={cls.aside}>
+          <div className={cls.filters}>
+            <h3>Фильтры</h3>
+            <Form form={form} action="">
+              <Form.Item key="moviesFilter">
+                <Select
+                  value={year}
+                  onChange={(value) => {
+                    setYear(value);
+                    localStorage.setItem("year", JSON.stringify(value));
+                    setSearchValue("");
+                    localStorage.removeItem("searchValue");
+                    setPage(1);
+                    localStorage.removeItem("page");
+                  }}
+                  defaultValue=""
+                  style={{ width: 250 }}
+                  options={yearFilter}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Select
+                  value={country}
+                  onChange={(value) => {
+                    setCountry(value);
+                    localStorage.setItem("country", JSON.stringify(value));
+                    setSearchValue("");
+                    localStorage.removeItem("searchValue");
+                    setPage(1);
+                    localStorage.removeItem("page");
+                  }}
+                  defaultValue=""
+                  style={{ width: 250 }}
+                  options={countryFilter}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Select
+                  value={ageRating}
+                  onChange={(value) => {
+                    setAgeRating(value);
+                    localStorage.setItem("ageRating", JSON.stringify(value));
+                    setSearchValue("");
+                    localStorage.removeItem("searchValue");
+                    setPage(1);
+                    localStorage.removeItem("page");
+                  }}
+                  defaultValue=""
+                  style={{ width: 250 }}
+                  options={ageRatingFilter}
+                />
+              </Form.Item>
+            </Form>
+            <Button onClick={resetSearchValue}>Сбросить фильтры</Button>
+          </div>
         </aside>
       </div>
       <Pagination
         locale={{ items_per_page: " на странице" }}
         className={cls.pagination}
         onChange={selectPage}
-        total={(searchValue ? moviesByName : movies)?.pages}
+        total={(searchValue ? moviesByName : moviesByFilters)?.pages}
         current={page}
       />
     </section>

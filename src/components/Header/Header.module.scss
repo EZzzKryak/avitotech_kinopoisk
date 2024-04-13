@@ -1,22 +1,70 @@
 .header {
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
   height: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  border-bottom: 1px solid var(--border-main);
+}
+
+.link,
+.authLink {
+  text-decoration: none;
+  display: inline-block;
+  margin: 0;
 }
 
 .link {
-  text-decoration: none;
-  color: #fff;
-  display: inline-block;
-  margin: 0;
+  transition: color 0.2s ease;
+  color: #000;
+  &:hover {
+    color: var(--lightBlue);
+  }
+}
+
+.authLink {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  transition: color 0.2s ease;
+  color: #000;
+  &:hover {
+    color: var(--lightBlue);
+  }
 }
 
 .headerLogo {
   font-family: "Druk Wide Cy Web Bold Regular", sans-serif;
   letter-spacing: 1px;
   margin: 0;
+  font-size: 26px;
+  line-height: 30px;
+}
+
+.shapkaWrapper {
+  position: relative;
+}
+
+.shapka {
+  font-family: "Druk Wide Cy Web Bold Regular", sans-serif;
+  font-size: 36px;
+  line-height: 40px;
+  letter-spacing: 5px;
+  z-index: 1;
+}
+
+.cap {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: 14px;
+  left: -22px;
+  transform: rotate(-14deg);
+  z-index: 2;
+}
+
+.linkWrapper {
+  width: 380px;
+  text-align: right;
 }

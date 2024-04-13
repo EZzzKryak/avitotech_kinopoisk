@@ -25,6 +25,20 @@
   margin: 0;
 }
 
+.ratingWrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.rating {
+  font-family: "Druk Wide Cy Web Bold Regular", sans-serif;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
 .descriptionContainer {
   position: relative;
   display: flex;

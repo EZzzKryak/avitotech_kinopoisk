@@ -3,6 +3,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 const webpack = require("webpack"); //подключаем webpack для использования встроенного плагина EnvironmentPlugin
+const Dotenv = require("dotenv-webpack");
 
 //в зависимости от того, какой скрипт мы запустили
 // переменная production получит либо false, либо true
@@ -89,5 +90,6 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: "development", // значение по умолчанию 'development', если переменная process.env.NODE_ENV не передана при вызове сборки
     }),
+    new Dotenv(),
   ],
 };

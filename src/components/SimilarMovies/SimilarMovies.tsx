@@ -1,22 +1,12 @@
 import { Link } from "react-router-dom";
-import cls from "./SimilarMovies.module.scss";
 import "swiper/css";
-import "swiper/css/navigation";
-import "./styles.css";
-import { Mousewheel, Autoplay } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Movie } from "../../api/types.api";
 import Placeholder from "../Placeholder/Placeholder";
+import cls from "./SimilarMovies.module.scss";
 interface SimilarMoviesProps {
-  similarMovies:
-    | {
-        id: number;
-        name: string;
-        poster: {
-          previewUrl: string;
-          url: string;
-        };
-      }[]
-    | undefined;
+  similarMovies: Movie[] | undefined;
 }
 
 const SimilarMovies = ({ similarMovies }: SimilarMoviesProps) => {
@@ -51,7 +41,9 @@ const SimilarMovies = ({ similarMovies }: SimilarMoviesProps) => {
                         src={movie.poster.previewUrl}
                         alt={movie.name}
                       />
-                      <p className={cls.similarName}>{movie.name}</p>
+                      <p className={cls.similarName}>
+                        {movie.name} ({movie.year})
+                      </p>
                     </Link>
                   </SwiperSlide>
                 </li>

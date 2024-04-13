@@ -24,7 +24,17 @@
   font-weight: 600;
 }
 
+.actorPhoto {
+  height: 200px !important;
+}
+
 .slide {
   display: flex;
   flex-direction: column;
+}
+
+.slideSkeleton {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
 }

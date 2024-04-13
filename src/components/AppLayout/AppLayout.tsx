@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ConfigProvider } from "antd";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import cls from "./AppLayout.module.scss";
-import { ConfigProvider } from "antd";
 const queryClient = new QueryClient();
 
 const AppLayout = () => {
@@ -27,7 +27,7 @@ const AppLayout = () => {
               algorithm: true,
               cardBg: "transparent",
               itemSelectedColor: "#000",
-              itemHoverColor: "#333",
+              itemHoverColor: "var(--border-main-active)",
               colorBorderSecondary: "rgb(215, 215, 215)",
               fontFamily: "Montserrat, sans-serif",
             },
@@ -35,18 +35,25 @@ const AppLayout = () => {
               algorithm: true,
               controlOutlineWidth: 0,
               optionFontSize: 16,
-              optionSelectedColor: "#000",
+              optionSelectedColor: "var(--border-main-active)",
               optionSelectedBg: "rgb(230, 230, 230)",
-              colorPrimaryHover: "#000",
-              colorPrimary: "#000",
+              colorPrimaryHover: "var(--border-main-active)",
+              colorPrimary: "var(--border-main-active)",
               fontFamily: "Montserrat, sans-serif",
             },
             Input: {
               algorithm: true,
-              activeBorderColor: "#000",
-              hoverBorderColor: "#000",
+              activeBorderColor: "var(--border-main-active)",
+              hoverBorderColor: "var(--border-main-active)",
               activeShadow: "none",
               fontFamily: "Montserrat, sans-serif",
+            },
+            Pagination: {
+              colorPrimary: "var(--border-main-active)",
+              colorPrimaryHover: "var(--border-main-active)",
+              colorPrimaryBorder: "var(--border-main-active)",
+              colorText: "var(--border-main-active)",
+              colorTextDisabled: "var(--border-main-active)",
             },
           },
         }}

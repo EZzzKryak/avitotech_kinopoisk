@@ -1,19 +1,22 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "antd";
 import axios from "axios";
-import React, { LegacyRef, useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import { baseUrl } from "../../api/kinopoisk.api";
+import React, { useEffect } from "react";
 import { ReviewsResponse } from "../../api/types.api";
+import { API_TOKEN, baseUrl } from "../../utils/constants";
+import Placeholder from "../Placeholder/Placeholder";
 import ReviewDescription from "../ReviewDescription/ReviewDescription";
 import cls from "./Review.module.scss";
-import Placeholder from "../Placeholder/Placeholder";
 
 interface ReviewsProps {
-  movieId: string | undefined;
+  movieId: number | undefined;
 }
 
 const Reviews = ({ movieId }: ReviewsProps) => {
+  const formatDate = (dateFormat: string): string => {
+    const date = dateFormat.substring(0, 10).split("-").reverse().join(".");
+    return date;
+  };
   // const { ref } = useInView();
   const queryClient = useQueryClient();
   // Делается 2 запроса!!
@@ -22,20 +25,18 @@ const Reviews = ({ movieId }: ReviewsProps) => {
     error,
     isFetching,
     isFetchingNextPage,
-    isFetchingPreviousPage,
     fetchNextPage,
     fetchPreviousPage,
     hasNextPage,
-    hasPreviousPage,
   } = useInfiniteQuery({
     queryKey: ["reviews"],
     queryFn: async ({ pageParam }): Promise<ReviewsResponse | undefined> => {
       try {
         const { data } = await axios.get<ReviewsResponse>(
-          `${baseUrl}review?movieId=${movieId}&page=${pageParam}`,
+          `${baseUrl}v1.4/review?movieId=${movieId}&page=${pageParam}`,
           {
             headers: {
-              "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+              "X-API-KEY": API_TOKEN,
             },
           },
         );
@@ -51,7 +52,6 @@ const Reviews = ({ movieId }: ReviewsProps) => {
   });
 
   useEffect(() => {
-    // Очистить кеш при размонтировании компонент
     return () => {
       queryClient.resetQueries({ queryKey: ["reviews"], exact: true });
     };
@@ -63,16 +63,11 @@ const Reviews = ({ movieId }: ReviewsProps) => {
   //   }
   // }, [fetchNextPage, inView]);
 
-  const formatDate = (dateFormat: string): string => {
-    const date = dateFormat.substring(0, 10).split("-").reverse().join(".");
-    return date;
-  };
-
   return (
     <ul className={cls.reviews}>
       {data?.pages.map((page) => (
         <React.Fragment key={page?.page}>
-          {page?.docs.length ? (
+          {page?.docs?.length ? (
             page?.docs.map((review) => (
               <li className={cls.reviewItem} key={review.id}>
                 <div className={cls.reviewHeader}>
@@ -92,7 +87,7 @@ const Reviews = ({ movieId }: ReviewsProps) => {
           )}
         </React.Fragment>
       ))}
-      {data?.pages[0]?.docs.length ||
+      {data?.pages[0]?.docs?.length ||
       data?.pages[0]?.page !== data?.pages[0]?.total ? (
         <Button
           className={cls.moreBtn}

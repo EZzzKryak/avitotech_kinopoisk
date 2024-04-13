@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_TOKEN, baseUrl, selectFields } from "../utils/constants";
 import {
   ImagesResponse,
   Movie,
@@ -6,9 +7,6 @@ import {
   ReviewsResponse,
   SeriesResponse,
 } from "./types.api";
-export const baseUrl = "https://api.kinopoisk.dev/v1.4/";
-const selectFields =
-  "selectFields=id&selectFields=ageRating&selectFields=countries&selectFields=enName&selectFields=name&selectFields=year&selectFields=poster";
 
 export const getMoviesByFilters = async ({
   limit = 10,
@@ -25,11 +23,10 @@ export const getMoviesByFilters = async ({
 }): Promise<MoviesResponse | undefined> => {
   try {
     const { data } = await axios.get<MoviesResponse>(
-      // `${baseUrl}movie${name && "/search?query=" + name}?page=${page}&limit=${limit}`,
-      `${baseUrl}movie?${selectFields}&page=${page}&limit=${limit}${country && "&countries.name=" + country}${year && "&year=" + year}${ageRating && "&ageRating=" + ageRating}`,
+      `${baseUrl}v1.4/movie?${selectFields}&page=${page}&limit=${limit}${country && "&countries.name=" + country}${year && "&year=" + year}${ageRating && "&ageRating=" + ageRating}`,
       {
         headers: {
-          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+          "X-API-KEY": API_TOKEN,
         },
       },
     );
@@ -50,10 +47,10 @@ export const getMoviesByName = async ({
 }): Promise<MoviesResponse | undefined> => {
   try {
     const { data } = await axios.get<MoviesResponse>(
-      `${baseUrl}movie/search?query=${name}&page=${page}&limit=${limit}`,
+      `${baseUrl}v1.4/movie/search?query=${name}&page=${page}&limit=${limit}`,
       {
         headers: {
-          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+          "X-API-KEY": API_TOKEN,
         },
       },
     );
@@ -66,9 +63,9 @@ export const getMoviesByName = async ({
 // Получение фильма по клику (id)
 export const getMovieById = async (id: number): Promise<Movie | undefined> => {
   try {
-    const { data } = await axios.get<Movie>(`${baseUrl}movie/${id}`, {
+    const { data } = await axios.get<Movie>(`${baseUrl}v1.4/movie/${id}`, {
       headers: {
-        "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+        "X-API-KEY": API_TOKEN,
       },
     });
     // console.log(data);
@@ -84,10 +81,10 @@ export const getImagesByMovieId = async (
 ): Promise<ImagesResponse | undefined> => {
   try {
     const { data } = await axios.get<ImagesResponse>(
-      `${baseUrl}image?movieId=${id}`,
+      `${baseUrl}v1.4/image?movieId=${id}`,
       {
         headers: {
-          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+          "X-API-KEY": API_TOKEN,
         },
       },
     );
@@ -103,29 +100,10 @@ export const getSeriesByMovieId = async (
 ): Promise<SeriesResponse | undefined> => {
   try {
     const { data } = await axios.get<SeriesResponse>(
-      `${baseUrl}season?movieId=${id}&sortField=number&sortType=1`,
+      `${baseUrl}v1.4/season?movieId=${id}&sortField=number&sortType=1`,
       {
         headers: {
-          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
-        },
-      },
-    );
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const getReviewsByMovieId = async (
-  id: number,
-  page?: number,
-): Promise<ReviewsResponse | undefined> => {
-  try {
-    const { data } = await axios.get<ReviewsResponse>(
-      `${baseUrl}review?movieId=&page=${page}&movieId=${id}`,
-      {
-        headers: {
-          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+          "X-API-KEY": API_TOKEN,
         },
       },
     );
@@ -140,10 +118,27 @@ export const getCastByMovieId = async (
 ): Promise<ReviewsResponse | undefined> => {
   try {
     const { data } = await axios.get<ReviewsResponse>(
-      `https://api.kinopoisk.dev/v1.4/person?selectFields=name&selectFields=profession&movies.id=${id}`,
+      `${baseUrl}v1.4/person?selectFields=name&selectFields=profession&movies.id=${id}`,
       {
         headers: {
-          "X-API-KEY": "WF76VQQ-HQB4P5G-JFJH8DF-CRKDP1M",
+          "X-API-KEY": API_TOKEN,
+        },
+      },
+    );
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getCountries = async () => {
+  try {
+    const { data } = await axios.get(
+      `${baseUrl}/v1/movie/possible-values-by-field?field=countries.name`,
+      {
+        headers: {
+          "X-API-KEY": API_TOKEN,
         },
       },
     );

@@ -1,20 +1,25 @@
+import { useQuery } from "@tanstack/react-query";
 import "swiper/css";
-import "./styles.css";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ImagesResponse } from "../../api/types.api";
-import cls from "./Gallery.module.scss";
+import { getImagesByMovieId } from "../../api/kinopoisk.api";
 import Placeholder from "./../Placeholder/Placeholder";
-import { text } from "stream/consumers";
+import cls from "./Gallery.module.scss";
 
 interface GalleryProps {
-  images: ImagesResponse | undefined;
+  movieId: number | undefined;
 }
 
-const Gallery = ({ images }: GalleryProps) => {
+const Gallery = ({ movieId }: GalleryProps) => {
+  const { data: movieImages } = useQuery({
+    queryKey: ["image"],
+    queryFn: () => getImagesByMovieId(Number(movieId)),
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <>
-      {images?.docs.length ? (
+      {movieImages?.docs.length ? (
         <Swiper
           pagination={{
             dynamicBullets: true,
@@ -22,7 +27,7 @@ const Gallery = ({ images }: GalleryProps) => {
           modules={[Pagination]}
           className="mySwiper"
         >
-          {images?.docs?.map((image) => (
+          {movieImages?.docs?.map((image) => (
             <li key={image.id}>
               <SwiperSlide key={image.id}>
                 <img className={cls.galleryImage} src={image.url} alt="" />
