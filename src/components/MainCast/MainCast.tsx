@@ -1,4 +1,5 @@
 import { Skeleton } from "antd";
+import { useMediaQuery } from "react-responsive";
 import "swiper/css";
 import { Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,7 +13,8 @@ interface MainCastProps {
   isFetching: boolean;
 }
 const MainCast = ({ cast, isFetching }: MainCastProps) => {
-  // Для полного списка каста
+  const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
+  // Для полного списка актёров
   // const { data: cast } = useQuery({
   //   queryKey: ["cast"],
   //   queryFn: () => getCastByMovieId(Number(movieId)),
@@ -26,8 +28,8 @@ const MainCast = ({ cast, isFetching }: MainCastProps) => {
       {cast?.length ? (
         <ul className={cls.cast}>
           <Swiper
-            slidesPerView={6}
-            spaceBetween={10}
+            slidesPerView={isMobile ? 5 : 7}
+            spaceBetween={isMobile ? 5 : 10}
             mousewheel={true}
             modules={[Mousewheel]}
             direction={"horizontal"}

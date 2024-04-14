@@ -1,8 +1,10 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, Pagination, Select } from "antd";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import ScrollToTop from "react-scroll-to-top";
 import { getMoviesByFilters, getMoviesByName } from "../../api/kinopoisk.api";
+import Error from "../../components/Error/Error";
 import Movie from "../../components/Movie/Movie";
 import Writer from "../../components/Tipewriter/Tipewriter";
 import useDebounce from "../../hooks/useDebounce";
@@ -10,6 +12,7 @@ import { ageRatingFilter, countryFilter, yearFilter } from "../../utils/utils";
 import cls from "./HomePage.module.scss";
 
 const HomePage = () => {
+  const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -44,8 +47,8 @@ const HomePage = () => {
 
   const {
     isFetching,
-    isError,
-    error,
+    error: errorByFilters,
+    refetch: refetchByFilters,
     data: moviesByFilters,
   } = useQuery({
     queryKey: ["moviesByFilters", limit, page, ageRating, country, year],
@@ -61,7 +64,11 @@ const HomePage = () => {
     refetchOnWindowFocus: false,
   });
 
-  const { data: moviesByName } = useQuery({
+  const {
+    data: moviesByName,
+    refetch: refetchByName,
+    error: errorByName,
+  } = useQuery({
     queryKey: ["moviesByName", limit, page, debouncedSearchValue],
     queryFn: () => getMoviesByName({ limit, page, name: debouncedSearchValue }),
     placeholderData: keepPreviousData,
@@ -99,6 +106,13 @@ const HomePage = () => {
     setYear("");
     setPage(1);
   };
+
+  if (errorByName) {
+    return <Error refreshQuery={refetchByName} />;
+  }
+  if (errorByFilters) {
+    return <Error refreshQuery={refetchByFilters} />;
+  }
 
   return (
     <section className={cls.mainSection}>
@@ -194,6 +208,7 @@ const HomePage = () => {
         locale={{ items_per_page: " на странице" }}
         className={cls.pagination}
         onChange={selectPage}
+        size={isMobile ? "small" : "default"}
         total={(searchValue ? moviesByName : moviesByFilters)?.pages}
         current={page}
       />

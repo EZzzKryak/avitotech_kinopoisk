@@ -40,6 +40,7 @@
   margin: 0;
   font-size: 26px;
   line-height: 30px;
+  text-align: left;
 }
 
 .shapkaWrapper {
@@ -64,7 +65,72 @@
   z-index: 2;
 }
 
-.linkWrapper {
+.linksBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
   width: 380px;
   text-align: right;
+}
+
+@media screen and (max-width: 960px) {
+  .shapka {
+    font-size: 28px;
+    line-height: 34px;
+  }
+  .authLink {
+    font-size: 16px;
+    line-height: 19px;
+  }
+  .cap {
+    height: 40px;
+    width: 40px;
+    top: 12px;
+    left: -16px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .header {
+    height: 80px;
+  }
+  .headerLogo {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .authLink {
+    font-size: 14px;
+    line-height: 17px;
+  }
+  .shapka {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .cap {
+    height: 33px;
+    width: 33px;
+    top: 10px;
+    left: -13px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .header {
+    height: 60px;
+  }
+  .shapka {
+    font-size: 20px;
+    line-height: 23px;
+  }
+  .cap {
+    height: 25px;
+    width: 25px;
+    top: 9px;
+    left: -10px;
+  }
+  .authLink {
+    font-size: 12px;
+    line-height: 14px;
+  }
 }

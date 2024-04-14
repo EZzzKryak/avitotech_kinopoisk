@@ -3,9 +3,18 @@ import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import React, { useState } from "react";
 import { SeriesResponse } from "../../api/types.api";
+import Placeholder from "../Placeholder/Placeholder";
+
+interface SeriesMenuProps {
+  series: SeriesResponse | undefined;
+  isSeries: boolean | undefined;
+}
+interface LevelKeysProps {
+  key?: string;
+  children?: LevelKeysProps[];
+}
 
 type MenuItem = Required<MenuProps>["items"][number];
-
 function getItem(
   label: React.ReactNode,
   key: React.Key,
@@ -21,12 +30,8 @@ function getItem(
     type,
   } as MenuItem;
 }
-interface LevelKeysProps {
-  key?: string;
-  children?: LevelKeysProps[];
-}
 
-const SeriesMenu = ({ series }: { series: SeriesResponse | undefined }) => {
+const SeriesMenu = ({ series, isSeries }: SeriesMenuProps) => {
   const [stateOpenKeys, setStateOpenKeys] = useState(["2", "23"]);
 
   const items: MenuItem[] = series?.docs.map((item) =>
@@ -60,7 +65,6 @@ const SeriesMenu = ({ series }: { series: SeriesResponse | undefined }) => {
     const currentOpenKey = openKeys.find(
       (key) => stateOpenKeys.indexOf(key) === -1,
     );
-    // open
     if (currentOpenKey !== undefined) {
       const repeatIndex = openKeys
         .filter((key) => key !== currentOpenKey)
@@ -68,16 +72,19 @@ const SeriesMenu = ({ series }: { series: SeriesResponse | undefined }) => {
 
       setStateOpenKeys(
         openKeys
-          // remove repeat key
           .filter((_, index) => index !== repeatIndex)
-          // remove current level all child
           .filter((key) => levelKeys[key] <= levelKeys[currentOpenKey]),
       );
     } else {
-      // close
       setStateOpenKeys(openKeys);
     }
   };
+
+  if (!isSeries) {
+    return (
+      <Placeholder text="Это не сериал, можете ознакомиться с похожими фильмами ниже" />
+    );
+  }
 
   return (
     <Menu

@@ -2,11 +2,48 @@
   text-align: left;
 }
 
+.awardsTitle {
+  margin: 10px 0;
+}
+
+.title {
+  margin: 0;
+}
+
 .statsList {
   list-style: none;
   padding: 0;
+  margin: 6px 0 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .feesTitle {
   font-weight: 500;
+}
+
+@media screen and (max-width: 960px) {
+  .awardsTitle {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .title,
+  .feesTitle,
+  .statsItem {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .awardsTitle {
+    font-size: 14px;
+    line-height: 17px;
+  }
+  .title,
+  .feesTitle,
+  .statsItem {
+    font-size: 12px;
+    line-height: 14px;
+  }
 }

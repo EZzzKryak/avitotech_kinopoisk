@@ -22,9 +22,52 @@
 
 .similarImage {
   height: 320px !important;
+  object-fit: cover !important;
 }
 
 .similarName {
   font-size: 16px;
   margin: 10px 0 0;
+}
+
+@media screen and (max-width: 1600px) {
+  .similarImage {
+    height: 360px !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .similarImage {
+    height: 210px !important;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .similarImage {
+    height: 240px !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .similarImage {
+    height: 160px !important;
+  }
+  .similarName {
+    font-size: 10px;
+  }
+  .similarList {
+    margin: 0 20px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .similarImage {
+    height: 100px !important;
+  }
+  .similarTitle {
+    margin: 20px 0 10px;
+  }
+  .similarList {
+    margin: 0 10px;
+  }
 }

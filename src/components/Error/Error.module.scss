@@ -1,0 +1,37 @@
+.error {
+  margin: 0 auto;
+  margin-top: 50px;
+  min-height: 120px;
+  max-width: 400px;
+  border: 1px dashed red;
+  border-radius: 10px;
+  padding: 10px;
+  color: red;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+.errorText {
+  margin: 0;
+}
+
+.errorIcon {
+  font-size: 30px;
+}
+
+@media screen and (max-width: 640px) {
+  .error {
+    margin-top: 20px;
+    min-height: 90px;
+    max-width: 300px;
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .errorIcon {
+    font-size: 20px;
+  }
+}

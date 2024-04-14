@@ -9,7 +9,7 @@ interface MonetizationStatsProps {
 const MonetizationStats = ({ budget, fees }: MonetizationStatsProps) => {
   return (
     <div className={cls.awards}>
-      <h3>Бюджет и сборы</h3>
+      <h3 className={cls.awardsTitle}>Бюджет и сборы</h3>
       <p className={cls.title}>
         <span className={cls.feesTitle}>Бюджет: </span>{" "}
         {budget?.value?.toLocaleString() || "неизвестно"}

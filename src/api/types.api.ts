@@ -6,7 +6,7 @@ export interface Pagination {
 }
 export enum ReviewStatus {
   POSITIVE = "Позитивный",
-  NEYTRAL = "Нейтральный",
+  NEUTRAL = "Нейтральный",
   NEGATIVE = "Негативный",
 }
 export interface Country {

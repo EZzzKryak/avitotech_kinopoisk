@@ -3,11 +3,10 @@
   margin-bottom: 10px;
 }
 
-// Переделать глобально?
 .moreBtn {
   font-size: 12px;
-  line-height: 15px;
-  padding: 2px 6px;
+  line-height: 14px;
+  height: 28px;
 }
 
 .hiddenElement {
@@ -15,4 +14,30 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+@media screen and (max-width: 960px) {
+  .reviewDescription {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .moreBtn {
+    font-size: 10px;
+    line-height: 12px;
+    height: 22px;
+    padding: 5px 8px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .reviewDescription {
+    font-size: 10px;
+    line-height: 12px;
+  }
+  .moreBtn {
+    font-size: 10px;
+    line-height: 12px;
+    height: 20px;
+    padding: 4px 5px;
+  }
 }

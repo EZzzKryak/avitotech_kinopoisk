@@ -6,6 +6,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.js --env env=prod",
     "start": "webpack serve --config webpack/webpack.config.js --env env=dev",
+    "dev:server": "node ./json-server/index.js",
     "lint": "eslint . --ext .js,.ts,.tsx",
     "lint:fix": "npm run lint --fix",
     "format": "prettier . --write"
@@ -35,6 +36,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "html-webpack-plugin": "^5.6.0",
+    "json-server": "^0.17.0",
     "mini-css-extract-plugin": "^2.8.1",
     "postcss-loader": "^8.1.1",
     "prettier": "^3.2.5",
@@ -59,7 +61,9 @@
     "match-sorter": "^6.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.3",
     "react-intersection-observer": "^9.8.2",
+    "react-responsive": "^10.0.0",
     "react-router-dom": "^6.22.3",
     "react-scroll-to-top": "^3.0.0",
     "react-simple-typewriter": "^5.0.1",

@@ -1,9 +1,12 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "antd";
-import axios from "axios";
 import React, { useEffect } from "react";
-import { ReviewsResponse } from "../../api/types.api";
-import { API_TOKEN, baseUrl } from "../../utils/constants";
+import { ReviewStatus, ReviewsResponse } from "../../api/types.api";
+import Negative from "../../assets/images/negative.svg";
+import Neutral from "../../assets/images/neutral.svg";
+import Positive from "../../assets/images/positive.svg";
+import axiosInstance from "../../config/axiosInstance";
+import Error from "../Error/Error";
 import Placeholder from "../Placeholder/Placeholder";
 import ReviewDescription from "../ReviewDescription/ReviewDescription";
 import cls from "./Review.module.scss";
@@ -13,32 +16,25 @@ interface ReviewsProps {
 }
 
 const Reviews = ({ movieId }: ReviewsProps) => {
+  // const { ref } = useInView(); Для инфинит скрола
   const formatDate = (dateFormat: string): string => {
     const date = dateFormat.substring(0, 10).split("-").reverse().join(".");
     return date;
   };
-  // const { ref } = useInView();
   const queryClient = useQueryClient();
-  // Делается 2 запроса!!
   const {
     data,
     error,
-    isFetching,
+    refetch,
     isFetchingNextPage,
     fetchNextPage,
-    fetchPreviousPage,
     hasNextPage,
   } = useInfiniteQuery({
     queryKey: ["reviews"],
     queryFn: async ({ pageParam }): Promise<ReviewsResponse | undefined> => {
       try {
-        const { data } = await axios.get<ReviewsResponse>(
-          `${baseUrl}v1.4/review?movieId=${movieId}&page=${pageParam}`,
-          {
-            headers: {
-              "X-API-KEY": API_TOKEN,
-            },
-          },
+        const { data } = await axiosInstance.get<ReviewsResponse>(
+          `v1.4/review?movieId=${movieId}&page=${pageParam}`,
         );
         return data;
       } catch (err) {
@@ -55,13 +51,17 @@ const Reviews = ({ movieId }: ReviewsProps) => {
     return () => {
       queryClient.resetQueries({ queryKey: ["reviews"], exact: true });
     };
-  }, []);
+  }, [queryClient]);
   // Для инфинит скрола, заменил кнопкой "Показать еще"
   // useEffect(() => {
   //   if (inView) {
   //     fetchNextPage();
   //   }
   // }, [fetchNextPage, inView]);
+
+  if (error) {
+    return <Error refreshQuery={refetch} />;
+  }
 
   return (
     <ul className={cls.reviews}>
@@ -75,6 +75,13 @@ const Reviews = ({ movieId }: ReviewsProps) => {
                   <h5 className={cls.reviewTitle}>
                     {review.title ? `«${review.title}»` : ""}
                   </h5>
+                  {review.type === ReviewStatus.POSITIVE ? (
+                    <img className={cls.smile} src={Positive} alt="" />
+                  ) : review.type === ReviewStatus.NEUTRAL ? (
+                    <img className={cls.smile} src={Neutral} alt="" />
+                  ) : (
+                    <img className={cls.smile} src={Negative} alt="" />
+                  )}
                 </div>
                 <ReviewDescription text={review.review} />
                 <p className={cls.reviewDate}>
@@ -87,7 +94,7 @@ const Reviews = ({ movieId }: ReviewsProps) => {
           )}
         </React.Fragment>
       ))}
-      {data?.pages[0]?.docs?.length ||
+      {data?.pages[0]?.total !== 0 &&
       data?.pages[0]?.page !== data?.pages[0]?.total ? (
         <Button
           className={cls.moreBtn}

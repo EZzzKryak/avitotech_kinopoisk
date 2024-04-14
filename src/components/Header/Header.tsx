@@ -11,7 +11,7 @@ const Header = () => {
           <h1 className={cls.headerLogo}>Поиск в Кинопоиске</h1>
         </Link>
       )}
-      <div className={cls.linkWrapper} />
+      <div className={cls.linksBlock} />
       <div className={cls.shapkaWrapper}>
         {location.pathname === "/" && (
           <>
@@ -20,11 +20,18 @@ const Header = () => {
           </>
         )}
       </div>
-      <div className={cls.linkWrapper}>
-        <Link className={cls.authLink} to="/signin">
-          Войти
-        </Link>
-      </div>
+      <ul className={cls.linksBlock}>
+        <li>
+          <Link className={cls.authLink} to="/signin">
+            Войти
+          </Link>
+        </li>
+        <li>
+          <Link className={cls.authLink} to="/movies/random">
+            Случайный фильм
+          </Link>
+        </li>
+      </ul>
     </header>
   );
 };

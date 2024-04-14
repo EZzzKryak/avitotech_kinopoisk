@@ -1,8 +1,11 @@
+import { Button, ConfigProvider } from "antd";
 import {
   isRouteErrorResponse,
   useNavigate,
   useRouteError,
 } from "react-router-dom";
+import { mainTheme } from "../../config/theme.config";
+import cls from "./NotFoundPage.module.scss";
 
 export default function NotFoundPage() {
   const error = useRouteError();
@@ -16,29 +19,18 @@ export default function NotFoundPage() {
     }
 
     return (
-      <div>
-        <h1>Oops! Error {error.status}</h1>
-        <p>{error.statusText}</p>
+      <div className={cls.errorPage}>
+        <h1>Упс! Ошибка {error.status}</h1>
+        <p>Описание ошибки: {error.statusText}</p>
         {error.data?.message && (
           <p>
             <i>{error.data.message}</i>
           </p>
         )}
-        <button onClick={() => navigate(-1)}>Назад</button>
+        <ConfigProvider theme={mainTheme}>
+          <Button onClick={() => navigate(-1)}>Назад</Button>
+        </ConfigProvider>
       </div>
     );
-  } else if (error instanceof Error) {
-    return (
-      <div>
-        <h1>Oops! Unexpected Error</h1>
-        <p>Something went wrong.</p>
-        <p>
-          <i>{error.message}</i>
-        </p>
-        <button onClick={() => navigate(-1)}>Назад</button>
-      </div>
-    );
-  } else {
-    return <></>;
   }
 }

@@ -52,3 +52,25 @@ export const ageRatingFilter = [
   { value: "12-18", label: "12+" },
   { value: "18", label: "18+" },
 ];
+
+export const isSeriesFilter = [
+  { value: "", label: "Сериалы и фильмы" },
+  { value: "true", label: "Сериал" },
+  { value: "false", label: "Фильм" },
+];
+
+export const genreFilter = [
+  { value: "", label: "Все жанры" },
+  { value: "драма", label: "Драма" },
+  { value: "комедия", label: "Комедия" },
+  { value: "мелодрама", label: "Мелодрама" },
+  { value: "криминал", label: "Криминал" },
+  { value: "ужасы", label: "Ужасы" },
+];
+
+export const studioFilter = [
+  { value: "", label: "Все студии" },
+  { value: "HBO", label: "HBO" },
+  { value: "Netflix", label: "Netflix" },
+  { value: "Amazon", label: "Amazon" },
+];

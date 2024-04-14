@@ -5,7 +5,7 @@ import SkeletonMovieCard from "../SkeletonMovieCard/SkeletonMovieCard";
 import cls from "./Movie.module.scss";
 
 interface MovieProps {
-  movie: IMovie;
+  movie: IMovie | undefined;
   isFetching: boolean;
 }
 
@@ -15,12 +15,12 @@ const Movie = ({ movie, isFetching }: MovieProps) => {
       {isFetching ? (
         <SkeletonMovieCard />
       ) : (
-        <Link className={cls.movieItem} to={`movies/${movie.id}`}>
+        <Link className={cls.movieItem} to={`movies/${movie?.id}`}>
           <div className={cls.movieImageWrapper}>
-            {movie.poster?.previewUrl ? (
+            {movie?.poster?.previewUrl ? (
               <img
                 className={cls.movieImage}
-                src={movie.poster?.previewUrl}
+                src={movie?.poster?.previewUrl}
                 alt="Постер фильма"
               />
             ) : (
@@ -28,25 +28,25 @@ const Movie = ({ movie, isFetching }: MovieProps) => {
             )}
           </div>
           <h3 className={cls.movieTitle}>
-            {movie.name || movie.enName || "*Имя отсутствует"}
+            {movie?.name || movie?.enName || "*Имя не найдено"}
           </h3>
           <div className={cls.movieDescription}>
             <p className={cls.movieAgeRating}>
               Возрастной рейтинг:&nbsp;
-              {movie.ageRating == 0 ? 0 : movie.ageRating || "Не указан"}
+              {movie?.ageRating == 0 ? 0 : movie?.ageRating || "*Не указан"}
             </p>
             <p className={cls.movieYear}>
-              Год:&nbsp;{movie.year || "Не указан"}
+              Год:&nbsp;{movie?.year || "*Не указан"}
             </p>
             <ul className={cls.movieCountries}>
               <li>Страна:&nbsp;</li>
-              {movie.countries.length
-                ? movie.countries.map((country, i) => (
-                    <li className={cls.country} key={movie.id + i}>
+              {movie?.countries.length
+                ? movie?.countries.map((country, i) => (
+                    <li className={cls.country} key={movie?.id + i}>
                       {country.name}
                     </li>
                   ))
-                : "Страна неизвестна"}
+                : "*Страна неизвестна"}
             </ul>
           </div>
         </Link>

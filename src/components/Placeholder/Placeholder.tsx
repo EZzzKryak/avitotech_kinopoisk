@@ -7,7 +7,7 @@ interface PlaceholderProps {
 const Placeholder = ({ text }: PlaceholderProps) => {
   return (
     <div className={cls.placeholder}>
-      <p>{text}</p>
+      <p className={cls.placeholderText}>{text}</p>
     </div>
   );
 };

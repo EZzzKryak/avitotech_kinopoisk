@@ -1,3 +1,4 @@
+import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
@@ -10,14 +11,15 @@ interface SimilarMoviesProps {
 }
 
 const SimilarMovies = ({ similarMovies }: SimilarMoviesProps) => {
+  const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
   return (
     <div className={cls.similarMovies}>
       <h3 className={cls.similarTitle}>Похожие фильмы и сериалы</h3>
       {similarMovies?.length ? (
         <ul className={cls.similarList}>
           <Swiper
-            slidesPerView={5}
-            spaceBetween={20}
+            slidesPerView={isMobile ? 4 : 6}
+            spaceBetween={10}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
@@ -42,7 +44,7 @@ const SimilarMovies = ({ similarMovies }: SimilarMoviesProps) => {
                         alt={movie.name}
                       />
                       <p className={cls.similarName}>
-                        {movie.name} ({movie.year})
+                        {movie.name} {movie.year && `(${movie.year})`}
                       </p>
                     </Link>
                   </SwiperSlide>

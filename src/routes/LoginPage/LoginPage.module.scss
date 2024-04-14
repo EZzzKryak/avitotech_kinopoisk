@@ -1,6 +1,22 @@
 .login {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.form {
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid var(--border-main);
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loginBtn {
+  width: 200px;
+  margin: 0 auto;
 }

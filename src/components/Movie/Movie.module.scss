@@ -3,6 +3,8 @@
   border-radius: 10px;
   overflow: hidden;
   transition: all 0.3s ease;
+  max-width: 340px;
+  list-style: none;
 }
 .movie:hover {
   border-color: #333;
@@ -29,7 +31,8 @@
 }
 
 .movieImageWrapper {
-  height: 320px;
+  height: 400px;
+  object-fit: contain;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -50,6 +53,7 @@
 }
 
 .movieTitle {
+  padding: 0 5px;
   margin: 0;
   font-size: 18px;
   line-height: 22px;
@@ -76,4 +80,19 @@
 .country:not(:last-child):after {
   content: ", ";
   margin-right: 5px;
+}
+
+@media screen and (max-width: 533px) {
+  .movie {
+    max-width: 100%;
+  }
+  .movieImageWrapper {
+    height: 500px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .movieImageWrapper {
+    height: 400px;
+  }
 }

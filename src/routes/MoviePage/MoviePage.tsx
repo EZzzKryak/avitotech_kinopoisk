@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, Skeleton, Tabs, TabsProps } from "antd";
+import type { TabsProps } from "antd";
+import { Button, Skeleton, Tabs } from "antd";
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import { useNavigate, useParams } from "react-router-dom";
 import ScrollToTop from "react-scroll-to-top";
 import { getMovieById, getSeriesByMovieId } from "../../api/kinopoisk.api";
+import Error from "../../components/Error/Error";
 import Gallery from "../../components/Gallery/Gallery";
 import MainCast from "../../components/MainCast/MainCast";
 import MonetizationStats from "../../components/MonetizationStats/MonetizationStats";
@@ -14,36 +17,42 @@ import SimilarMovies from "../../components/SimilarMovies/SimilarMovies";
 import cls from "./MoviePage.module.scss";
 
 const MoviePage = () => {
+  const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
   const navigate = useNavigate();
   const { movieId } = useParams();
   const id = Number(movieId);
-
   const [isHidden, setIsHidden] = useState<boolean>(true);
 
-  // Movie Query
-  const { data, isFetching } = useQuery({
+  const {
+    data,
+    isFetching,
+    refetch: refetchMovie,
+    error: movieError,
+  } = useQuery({
     queryKey: ["movie"],
     queryFn: () => getMovieById(id),
     refetchOnWindowFocus: false,
   });
-  // Series Query
-  const { data: movieSeries } = useQuery({
+
+  const {
+    data: movieSeries,
+    refetch: refetchSeries,
+    error: seriesError,
+  } = useQuery({
     queryKey: ["series"],
     queryFn: () => getSeriesByMovieId(id),
-    // Не работает
     enabled: !!data?.isSeries,
     refetchOnWindowFocus: false,
   });
 
-  // Табы
   const tabsItems: TabsProps["items"] = [
     {
       key: "1",
       label: "Сезоны и серии",
-      children: data?.isSeries ? (
-        <SeriesMenu series={movieSeries} />
+      children: seriesError ? (
+        <Error refreshQuery={refetchSeries} />
       ) : (
-        <Placeholder text="Это не сериал, можете ознакомиться с похожими фильмами ниже" />
+        <SeriesMenu isSeries={data?.isSeries} series={movieSeries} />
       ),
     },
     {
@@ -61,6 +70,10 @@ const MoviePage = () => {
   const HideDescription = () => {
     setIsHidden((prev) => !prev);
   };
+
+  if (movieError) {
+    return <Error refreshQuery={refetchMovie} />;
+  }
 
   return (
     <section id="movieSection" className={cls.movie}>
@@ -88,9 +101,6 @@ const MoviePage = () => {
           )}
         </div>
         <div className={cls.rightColumn}>
-          <Button className={cls.backBtn} onClick={() => navigate(-1)}>
-            Назад
-          </Button>
           {isFetching ? (
             <Skeleton active />
           ) : (
@@ -99,6 +109,9 @@ const MoviePage = () => {
                 {data?.name || data?.enName || "*Имя отсутствует"} ({data?.year}
                 )
               </h2>
+              <Button className={cls.backBtn} onClick={() => navigate(-1)}>
+                Назад
+              </Button>
               {data?.description ? (
                 <>
                   <div className={cls.descriptionContainer}>
@@ -108,7 +121,7 @@ const MoviePage = () => {
                       {data?.description}
                     </p>
                   </div>
-                  <Button onClick={HideDescription}>
+                  <Button className={cls.moreBtn} onClick={HideDescription}>
                     {isHidden ? "Показать" : "Скрыть"}
                   </Button>
                 </>
@@ -117,7 +130,6 @@ const MoviePage = () => {
               )}
             </>
           )}
-
           <MainCast cast={data?.persons} isFetching={isFetching} />
           {isFetching ? (
             <Skeleton active />
@@ -127,14 +139,13 @@ const MoviePage = () => {
           <Tabs
             tabBarGutter={5}
             type="card"
-            size="large"
+            size={isMobile ? "small" : "large"}
             defaultActiveKey="1"
             items={tabsItems}
           />
         </div>
       </div>
       <SimilarMovies similarMovies={data?.similarMovies} />
-      {/* <Button onClick={() => navigate(-1)}>Назад</Button> */}
     </section>
   );
 };

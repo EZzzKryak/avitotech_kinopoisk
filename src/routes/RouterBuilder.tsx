@@ -1,8 +1,9 @@
 import App from "../components/AppLayout/AppLayout";
 import HomePage from "./HomePage/HomePage";
-import NotFoundPage from "./NotFoundPage/NotFoundPage";
-import MoviePage from "./MoviePage/MoviePage";
 import LoginPage from "./LoginPage/LoginPage";
+import MoviePage from "./MoviePage/MoviePage";
+import NotFoundPage from "./NotFoundPage/NotFoundPage";
+import RandomMovie from "./RandomMovie/RandomMovie";
 
 const RouterBuilder = () => {
   const generalRoutes = [
@@ -13,6 +14,10 @@ const RouterBuilder = () => {
     {
       path: "/movies/:movieId",
       element: <MoviePage />,
+    },
+    {
+      path: "/movies/random",
+      element: <RandomMovie />,
     },
   ];
 
